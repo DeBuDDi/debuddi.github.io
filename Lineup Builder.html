@@ -246,6 +246,7 @@
     <input type="file" id="img-upload" accept="image/*" multiple style="display: none"/>
     <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
     <button class="btn" onclick="resetLineup()">Reset Lineup</button>
+    <button class="btn" onclick="saveCurrentLineup()">Save Lineup</button>
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
@@ -305,6 +306,7 @@ document.getElementById('img-upload').addEventListener('change', function(e) {
     reader.onload = function(evt) {
       uploadedImages.push(evt.target.result);
       renderUploaded();
+      saveState(); // save images to localStorage when uploaded
     };
     reader.readAsDataURL(file);
   }
@@ -360,6 +362,26 @@ function getInitialLabels() {
 }
 let slotLabels = getInitialLabels();
 let slotImages = {};
+
+// --- Save/load state with uploads ---
+function saveState() {
+  let state = { slotLabels, slotImages, uploadedImages };
+  window.localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
+}
+function loadState() {
+  let state = window.localStorage.getItem('haikyuu_lineup_state');
+  if (state) {
+    try {
+      let { slotLabels: l, slotImages: i, uploadedImages: imgs } = JSON.parse(state);
+      slotLabels = l || getInitialLabels();
+      slotImages = i || {};
+      uploadedImages = imgs || [];
+      renderUploaded();
+      document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
+    } catch {}
+  }
+}
+loadState();
 
 document.querySelectorAll('.drop-slot').forEach(slot => {
   slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
@@ -434,23 +456,6 @@ function renderSlot(slot) {
   }
 }
 
-function saveState() {
-  let state = { slotLabels, slotImages };
-  window.localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
-}
-function loadState() {
-  let state = window.localStorage.getItem('haikyuu_lineup_state');
-  if (state) {
-    try {
-      let { slotLabels: l, slotImages: i } = JSON.parse(state);
-      slotLabels = l || getInitialLabels();
-      slotImages = i || {};
-      document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
-    } catch {}
-  }
-}
-loadState();
-
 function resetLineup() {
   slotLabels = getInitialLabels();
   slotImages = {};
@@ -458,6 +463,11 @@ function resetLineup() {
   saveState();
 }
 
+// --- Save Current Lineup Button (manual save) ---
+function saveCurrentLineup() {
+  saveState();
+  alert('Your current lineup, uploads, and edits have been saved!');
+}
 </script>
 </body>
 </html>
