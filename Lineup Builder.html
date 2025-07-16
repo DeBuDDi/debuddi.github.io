@@ -56,71 +56,210 @@
       border: 2px solid #1976d2; border-radius: 7px; margin: 2px; cursor: grab;
       background: #fff; box-shadow: 0 1px 4px #aac4e3;
     }
-    /* Added: Download Character Menu panel styles */
-    .right-side-panel {
+    .lineup-bg-wrapper {
+      position: relative;
+      width: 900px; height: 650px;
+      margin: auto;
+      background: 
+        linear-gradient(90deg, #87ceeb 0 50%, #f9a602 50% 100%),
+        repeating-linear-gradient(0deg, #fff2, #fff2 4px, transparent 4px, transparent 64px);
+      border: 4px solid #f9a602;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 3px 18px #aac4e3;
+    }
+    .court-border {
       position: absolute;
-      top: 0;
-      right: -260px;
-      width: 245px;
-      background: #f6f9ff;
-      border-radius: 18px;
-      box-shadow: 0 3px 14px #aac4e3;
-      padding: 20px 17px;
-      z-index: 10;
-      min-height: 270px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: right 0.2s;
+      top: 40px; left: 30px;
+      width: 840px; height: 520px;
+      border: 6px solid #fff;
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 0;
     }
-    .right-side-panel.open {
-      right: 0;
-      transition: right 0.3s;
+    .net {
+      position: absolute;
+      left: 0; width: 100%; top: 300px; height: 8px;
+      background: repeating-linear-gradient(
+        90deg,
+        #fff 0 20px, #999 20px 24px
+      );
+      opacity: 0.7;
+      z-index: 1;
     }
-    .download-link-btn {
-      margin-top: 24px;
-      background: #43a047;
-      color: #fff;
-      padding: 10px 22px;
-      border-radius: 8px;
-      font-size: 1.1em;
-      font-weight: 600;
-      border: none;
+    .overlay-board {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(245,250,255,0.67);
+      border-radius: 22px;
+      pointer-events: none;
+    }
+
+    .drop-slot {
+      position: absolute;
+      width: 110px; height: 143px;
+      background: rgba(255,255,255,0.8);
+      border: 2.5px dashed #1976d2;
+      border-radius: 14px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      overflow: visible;
       cursor: pointer;
-      box-shadow: 0 2px 8px #aac4e3;
+      text-align: center;
       transition: background 0.17s;
+      z-index: 2;
     }
-    .download-link-btn:hover { background: #388e3c; }
-    .close-panel-btn {
-      background: #db3a3a;
-      color: #fff;
-      border: none;
-      border-radius: 7px;
-      padding: 4px 13px;
-      font-size: 1em;
-      position: absolute;
-      top: 11px;
-      right: 13px;
+    .drop-slot.dragover { background: #fff7b2; border-color: #f9a602; }
+    .char-img {
+      max-width: 98px; max-height: 120px;
+      border-radius: 9px;
+      background: #fff;
+      margin-top: 4px;
+      margin-bottom: 2px;
+      border: 1.5px solid #b2cbe9;
+      box-shadow: 0 2px 8px #aac4e3;
+      cursor: grab;
+    }
+    .label-edit {
+      width: 95px;
+      margin: 0 6px 7px 6px;
+      text-align: center;
+      border: 1.5px solid #1976d2;
+      border-radius: 6px;
+      font-size: 0.98em;
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #1976d2;
+      background: #f6f9ff;
+      padding: 2.5px 0;
+    }
+    .player-label {
+      font-size: 1.01em;
+      font-weight: 700;
+      color: #1976d2;
+      margin-top: 2px;
+      margin-bottom: 0;
+      line-height: 1.2;
+      background: #e2edff;
+      border-radius: 5px;
+      padding: 1px 5px;
+      pointer-events: auto;
+      word-break: break-word;
+      max-width: 97px;
       cursor: pointer;
+    }
+    /* Labels for position */
+    .slot-type-label {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-size: 0.83em;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      background: #1976d2;
+      border-radius: 9px;
+      padding: 2px 10px;
+      position: absolute;
+      left: 50%;
+      top: -16px;
+      transform: translateX(-50%);
+      z-index: 5;
+      pointer-events: none;
       box-shadow: 0 1px 6px #aac4e3;
     }
+    /* Coach/bench slots */
+    .coach-slot { border-color: #db3a3a; }
+    .bench-slot { border-style: dotted; border-color: #888; background: rgba(240,240,245,0.73);}
+    .bench-label { background: #888; }
+    .coach-label { background: #db3a3a;}
+    /* Download Character Menu Styles */
+    .download-char-menu {
+      position: fixed;
+      top: 70px; left: 0; right:0;
+      display: none;
+      z-index: 9999;
+      justify-content: center;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+    .download-char-menu.active {
+      display: flex;
+      pointer-events: auto;
+    }
+    .download-char-panel {
+      background: #f6f9ff;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px #aac4e3;
+      padding: 25px 30px 18px 30px;
+      max-width: 520px;
+      margin: 0 auto;
+      position: relative;
+      text-align: center;
+      animation: fadein .23s;
+    }
+    .download-char-panel h2 {
+      color: #1976d2;
+      margin-top: 0;
+      font-size: 1.4em;
+      font-weight: 700;
+    }
+    .download-char-close {
+      position: absolute; right: 13px; top: 13px;
+      background: transparent; border: none; font-size: 1.7em; color: #999; cursor: pointer;
+      font-family: inherit;
+    }
+    .download-char-images {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 17px;
+      margin: 17px 0 9px 0;
+    }
+    .download-char-thumb {
+      width: 80px; height: 110px; object-fit: cover;
+      border: 2px solid #aaa; border-radius: 7px;
+      box-shadow: 0 1px 4px #aac4e3;
+      margin: 3px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.13s;
+    }
+    .download-char-thumb:hover {
+      border-color: #1976d2;
+    }
+    .download-char-label {
+      font-size: 0.94em;
+      color: #1976d2;
+      margin: 2px 0 0 0;
+      font-weight: 700;
+      background: #e2edff;
+      border-radius: 4px;
+      padding: 1px 4px;
+      display: inline-block;
+      max-width: 76px;
+      word-break: break-word;
+    }
+    .empty-download-message {
+      color: #888;
+      margin: 17px 0 0 0;
+      font-size: 1.07em;
+    }
+    @keyframes fadein { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: none; } }
+    /* Responsive */
     @media (max-width: 950px) {
       .lineup-bg-wrapper { width: 99vw; height: 70vw; max-width: 99vw; max-height: 70vw;}
       .container { max-width: 99vw; }
-      .right-side-panel { width: 99vw !important; min-width: 240px;}
+    }
+    @media (max-width: 540px) {
+      .download-char-panel { max-width: 99vw; padding: 13px 6px 7px 6px; }
+      .download-char-thumb { width: 62px; height: 80px; }
+      .download-char-label { font-size: 0.81em; }
     }
   </style>
 </head>
 <body>
-<div class="container" style="position:relative">
+<div class="container">
   <h1>Haikyuu Volleyball Lineup Builder</h1>
   <div class="menu-bar">
     <input type="file" id="img-upload" accept="image/*" multiple style="display: none"/>
     <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
     <button class="btn" onclick="resetLineup()">Reset Lineup</button>
     <button class="btn" onclick="saveLineup()">Save Lineup</button>
-    <!-- Added: Download Character button -->
-    <button class="btn" id="downloadCharBtn" onclick="openDownloadPanel()">Download Character</button>
+    <button class="btn" id="open-download-menu">Download Character</button>
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
@@ -171,16 +310,23 @@
       <span class="slot-type-label bench-label">SUB</span>
     </div>
   </div>
-  <!-- Added: Right side Download Character panel -->
-  <div class="right-side-panel" id="rightPanel">
-    <button class="close-panel-btn" onclick="closeDownloadPanel()">✕</button>
-    <h2 style="text-align:center; color:#1976d2; margin-bottom:10px;">Download Character</h2>
-    <p style="text-align:center; font-size:1.04em;">Get the latest character pack.<br>
-    Always synced with Google Drive!</p>
-    <button class="download-link-btn" onclick="downloadCharacter()">Download from Drive</button>
-    <p style="margin-top:12px; font-size:0.94em; color:#888; text-align:center;">If the Google Drive is updated, this link will always have the newest characters.</p>
+</div>
+
+<!-- Download Character Menu -->
+<div class="download-char-menu" id="downloadCharMenu">
+  <div class="download-char-panel">
+    <button class="download-char-close" id="closeDownloadMenu" title="Close">&times;</button>
+    <h2>Download Character Image</h2>
+    <div class="download-char-images" id="downloadCharImages"></div>
+    <div class="empty-download-message" id="emptyDownloadMessage" style="display:none;">
+      No characters added yet. Upload characters first!
+    </div>
+    <div style="margin-top:15px;">
+      <small>Click an image to download it.</small>
+    </div>
   </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 let uploadedImages = [];
@@ -193,6 +339,7 @@ document.getElementById('img-upload').addEventListener('change', function(e) {
     reader.onload = function(evt) {
       uploadedImages.push(evt.target.result);
       renderUploaded();
+      renderDownloadCharMenu();
     };
     reader.readAsDataURL(file);
   }
@@ -209,6 +356,67 @@ function renderUploaded() {
     img.ondragstart = () => currentDragIndex = i;
     img.title = 'Drag to lineup';
     list.appendChild(img);
+  });
+}
+
+// --- Download Character Menu ---
+document.getElementById('open-download-menu').onclick = function() {
+  renderDownloadCharMenu();
+  document.getElementById('downloadCharMenu').classList.add('active');
+  document.body.style.overflow = 'hidden';
+};
+document.getElementById('closeDownloadMenu').onclick = function() {
+  document.getElementById('downloadCharMenu').classList.remove('active');
+  document.body.style.overflow = '';
+};
+// Close menu on outside click
+document.getElementById('downloadCharMenu').addEventListener('click', function(e) {
+  if (e.target === this) {
+    this.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+});
+
+function renderDownloadCharMenu() {
+  const imgDiv = document.getElementById('downloadCharImages');
+  const msg = document.getElementById('emptyDownloadMessage');
+  imgDiv.innerHTML = '';
+  if (uploadedImages.length === 0) {
+    msg.style.display = '';
+    return;
+  }
+  msg.style.display = 'none';
+  uploadedImages.forEach((src, i) => {
+    let thumb = document.createElement('img');
+    thumb.src = src;
+    thumb.className = 'download-char-thumb';
+    thumb.title = "Download this character";
+    // Download function
+    thumb.onclick = function() {
+      let link = document.createElement('a');
+      link.href = src;
+      link.download = `character${i+1}.png`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    };
+    imgDiv.appendChild(thumb);
+
+    // Look for the first slot to use as label (player name) if used in lineup
+    let foundLabel = '';
+    for (const [slotKey, imgSrc] of Object.entries(slotImages)) {
+      if (imgSrc === src && slotLabels[slotKey]) {
+        foundLabel = slotLabels[slotKey];
+        break;
+      }
+    }
+    // Show label if present
+    if (foundLabel) {
+      let label = document.createElement('div');
+      label.className = 'download-char-label';
+      label.innerText = foundLabel;
+      imgDiv.appendChild(label);
+    }
   });
 }
 
@@ -266,6 +474,7 @@ document.querySelectorAll('.drop-slot').forEach(slot => {
     }
     currentDragIndex = null;
     window._draggingSlot = null;
+    renderDownloadCharMenu(); // update menu if open
   };
   // Allow dragging a slot image to another slot
   slot.addEventListener('mousedown', function(e) {
@@ -297,6 +506,7 @@ function setSlotImage(slot, imgSrc, label) {
   let labelDiv = makeLabel(slotLabels[slotKey], val => {
     slotLabels[slotKey] = val;
     saveState();
+    renderDownloadCharMenu();
   });
   slot.appendChild(labelDiv);
 
@@ -306,6 +516,7 @@ function setSlotImage(slot, imgSrc, label) {
     slot.insertBefore(slotType, slot.firstChild);
   }
   saveState();
+  renderDownloadCharMenu();
 }
 function clearSlot(slot) {
   let slotKey = slot.dataset.slot;
@@ -346,6 +557,7 @@ function loadState() {
       document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
     } catch {}
   }
+  renderDownloadCharMenu();
 }
 loadState();
 
@@ -355,6 +567,7 @@ function resetLineup() {
   slotImages = {};
   document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
   saveState();
+  renderDownloadCharMenu();
 }
 
 // --- Save as Image using html2canvas ---
@@ -371,20 +584,6 @@ function saveLineup() {
     document.querySelector('.menu-bar').style.visibility = "";
     document.getElementById('upload-list').style.visibility = "";
   });
-}
-
-// --- Download Character Panel Logic ---
-const rightPanel = document.getElementById('rightPanel');
-function openDownloadPanel() {
-  rightPanel.classList.add('open');
-}
-function closeDownloadPanel() {
-  rightPanel.classList.remove('open');
-}
-// Replace with your Google Drive share link
-const googleDriveLink = "https://drive.google.com/drive/folders/xxxxxxxxxxxxxxxxxxxx?usp=sharing";
-function downloadCharacter() {
-  window.open(googleDriveLink, '_blank');
 }
 </script>
 </body>
