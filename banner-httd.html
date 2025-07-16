@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Google Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    body {
+      min-height: 100vh;
+      min-width: 100vw;
+    }
+    .sheet-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      min-width: 100vw;
+      background: #fff;
+    }
+    iframe {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      min-height: 100vh;
+      min-width: 100vw;
+      border: none;
+      background: #fff;
+    }
+    .header-text {
+      position: relative;
+      z-index: 10;
+      background: #fff;
+      padding: 16px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .header-text { font-size: 1em; padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header-text">
+   Change the default settings on your phone or tablet.
+   On your device, open Browser.
+   On the right of the address bar, tap More. Settings.
+   Under “Advanced,” select Site settings. Desktop site.
+   Turn on Desktop site.
+  </div>
+  <div class="sheet-container" style="top: 58px;">
+    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vRXxRWz4IVBLyeCHSiRAJ8VOh9o7EOG65-TRHQZOSs-aCEVS_vH9PZv8_L3hX_2EorO1RV-bL_j-rQl/pubhtml?gid=682119455&single=true" allowfullscreen></iframe>
+  </div>
+  <script>
+    // Dynamically adjust the container position based on header height
+    function adjustContainer() {
+      var header = document.querySelector('.header-text');
+      var container = document.querySelector('.sheet-container');
+      container.style.top = header.offsetHeight + 'px';
+      container.style.height = 'calc(100vh - ' + header.offsetHeight + 'px)';
+    }
+    window.addEventListener('resize', adjustContainer);
+    window.addEventListener('DOMContentLoaded', adjustContainer);
+  </script>
+</body>
+</html>

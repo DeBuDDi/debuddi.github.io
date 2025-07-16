@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Haikyuu Banner Menu | DeBuDDi Guide</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif">
+  <style>
+    body { font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif; background: #fffbe6; margin: 0; }
+    .container { max-width: 700px; margin: 2em auto; padding: 2em; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; }
+    h1 { color: #ff69b4; text-align: center; }
+    .menu-banner { display: flex; flex-wrap: wrap; justify-content: center; gap: 2em; margin: 2em 0; }
+    .banner-card {
+      background: #fffae5;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px #ffec6455;
+      padding: 1.5em 1em;
+      text-align: center;
+      width: 280px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .banner-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 24px #ffec6499;
+    }
+    .banner-img {
+      width: 100%;
+      max-width: 220px;
+      border-radius: 10px;
+      margin-bottom: 1em;
+      box-shadow: 0 2px 10px #ffe06699;
+    }
+    .banner-title {
+      font-size: 1.3em;
+      color: #ff69b4;
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+    .banner-desc {
+      font-size: 1em;
+      color: #444;
+      margin-bottom: 1em;
+    }
+    .banner-link {
+      display: inline-block;
+      background: #ff69b4;
+      color: #fff;
+      padding: 0.5em 1.2em;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-top: 0.5em;
+    }
+    .banner-link:hover {
+      background: #ff007f;
+    }
+    @media (max-width: 600px) {
+      .menu-banner { flex-direction: column; align-items: center; }
+      .banner-card { width: 98%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏐 Haikyuu Banner Menu</h1>
+    <p style="text-align:center;">
+      Choose your game and explore guides, tips, and more for each Haikyuu mobile title!
+    </p>
+    <div class="menu-banner">
+      <!-- Haikyuu Touch The Dream Banner -->
+      <div class="banner-card">
+        <img src="https://static.wikia.nocookie.net/haikyuu/images/d/d2/HTTD_main.jpg" alt="Haikyuu Touch the Dream" class="banner-img">
+        <div class="banner-title">Haikyuu!! Touch The Dream</div>
+        <div class="banner-desc">
+          Mobile volleyball action! Get guides, event info, tier lists, and banner updates for Touch The Dream.
+        </div>
+        <a class="banner-link" href="https://debuddihxh.github.io/haikyuu-touch-the-dream" target="_blank">
+          Explore Touch The Dream
+        </a>
+      </div>
+      <!-- Haikyu Fly High Banner -->
+      <div class="banner-card">
+        <img src="https://static.wikia.nocookie.net/haikyuu/images/7/7b/Haikyu_Fly_High_main.jpg" alt="Haikyu Fly High" class="banner-img">
+        <div class="banner-title">Haikyu!! Fly High</div>
+        <div class="banner-desc">
+          The latest Haikyuu! game. Strategies, character info, and news for Fly High players!
+        </div>
+        <a class="banner-link" href="https://debuddihxh.github.io/haikyu-fly-high" target="_blank">
+          Explore Fly High
+        </a>
+      </div>
+    </div>
+    <hr>
+    <p style="text-align:center;font-size:1.2em;color:#ffa500;">Thanks for being a Buddy! 🎈</p>
+  </div>
+</body>
+</html>
