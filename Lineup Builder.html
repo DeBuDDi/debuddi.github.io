@@ -48,6 +48,8 @@
       box-shadow: 0 2px 8px #aac4e3;
       font-family: 'Montserrat', Arial, sans-serif;
       transition: background 0.17s;
+      text-decoration: none;
+      display: inline-block;
     }
     .btn:hover { background: #12549b; }
     #upload-list { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;}
@@ -146,7 +148,6 @@
       max-width: 97px;
       cursor: pointer;
     }
-    /* Labels for position */
     .slot-type-label {
       font-family: 'Montserrat', Arial, sans-serif;
       font-size: 0.83em;
@@ -164,90 +165,13 @@
       pointer-events: none;
       box-shadow: 0 1px 6px #aac4e3;
     }
-    /* Coach/bench slots */
     .coach-slot { border-color: #db3a3a; }
     .bench-slot { border-style: dotted; border-color: #888; background: rgba(240,240,245,0.73);}
     .bench-label { background: #888; }
     .coach-label { background: #db3a3a;}
-    /* Download Character Menu Styles */
-    .download-char-menu {
-      position: fixed;
-      top: 70px; left: 0; right:0;
-      display: none;
-      z-index: 9999;
-      justify-content: center;
-      align-items: flex-start;
-      pointer-events: none;
-    }
-    .download-char-menu.active {
-      display: flex;
-      pointer-events: auto;
-    }
-    .download-char-panel {
-      background: #f6f9ff;
-      border-radius: 18px;
-      box-shadow: 0 4px 32px #aac4e3;
-      padding: 25px 30px 18px 30px;
-      max-width: 520px;
-      margin: 0 auto;
-      position: relative;
-      text-align: center;
-      animation: fadein .23s;
-    }
-    .download-char-panel h2 {
-      color: #1976d2;
-      margin-top: 0;
-      font-size: 1.4em;
-      font-weight: 700;
-    }
-    .download-char-close {
-      position: absolute; right: 13px; top: 13px;
-      background: transparent; border: none; font-size: 1.7em; color: #999; cursor: pointer;
-      font-family: inherit;
-    }
-    .download-char-images {
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 17px;
-      margin: 17px 0 9px 0;
-    }
-    .download-char-thumb {
-      width: 80px; height: 110px; object-fit: cover;
-      border: 2px solid #aaa; border-radius: 7px;
-      box-shadow: 0 1px 4px #aac4e3;
-      margin: 3px;
-      background: #fff;
-      cursor: pointer;
-      transition: border-color 0.13s;
-    }
-    .download-char-thumb:hover {
-      border-color: #1976d2;
-    }
-    .download-char-label {
-      font-size: 0.94em;
-      color: #1976d2;
-      margin: 2px 0 0 0;
-      font-weight: 700;
-      background: #e2edff;
-      border-radius: 4px;
-      padding: 1px 4px;
-      display: inline-block;
-      max-width: 76px;
-      word-break: break-word;
-    }
-    .empty-download-message {
-      color: #888;
-      margin: 17px 0 0 0;
-      font-size: 1.07em;
-    }
-    @keyframes fadein { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: none; } }
-    /* Responsive */
     @media (max-width: 950px) {
       .lineup-bg-wrapper { width: 99vw; height: 70vw; max-width: 99vw; max-height: 70vw;}
       .container { max-width: 99vw; }
-    }
-    @media (max-width: 540px) {
-      .download-char-panel { max-width: 99vw; padding: 13px 6px 7px 6px; }
-      .download-char-thumb { width: 62px; height: 80px; }
-      .download-char-label { font-size: 0.81em; }
     }
   </style>
 </head>
@@ -259,7 +183,12 @@
     <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
     <button class="btn" onclick="resetLineup()">Reset Lineup</button>
     <button class="btn" onclick="saveLineup()">Save Lineup</button>
-    <button class="btn" id="open-download-menu">Download Character</button>
+    <a
+      class="btn"
+      href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=sharing"
+      target="_blank"
+      rel="noopener"
+      >Download Character</a>
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
@@ -282,15 +211,12 @@
     <div class="drop-slot" data-type="main" data-slot="4" style="left: 520px; top: 250px;">
       <span class="slot-type-label">MB</span>
     </div>
-    <!-- FIXED main slot 5 position to match main slot 3 and 4 row -->
     <div class="drop-slot" data-type="main" data-slot="5" style="left: 780px; top: 250px;">
       <span class="slot-type-label">MB</span>
     </div>
-    <!-- Coach -->
     <div class="drop-slot coach-slot" data-type="coach" data-slot="coach" style="left: 30px; top: 320px; width:90px; height:120px;">
       <span class="slot-type-label coach-label">COACH</span>
     </div>
-    <!-- Bench/substitute (6) -->
     <div class="drop-slot bench-slot" data-type="bench" data-slot="sub0" style="left: 160px; top: 470px; width:90px; height:110px;">
       <span class="slot-type-label bench-label">SUB</span>
     </div>
@@ -311,22 +237,6 @@
     </div>
   </div>
 </div>
-
-<!-- Download Character Menu -->
-<div class="download-char-menu" id="downloadCharMenu">
-  <div class="download-char-panel">
-    <button class="download-char-close" id="closeDownloadMenu" title="Close">&times;</button>
-    <h2>Download Character Image</h2>
-    <div class="download-char-images" id="downloadCharImages"></div>
-    <div class="empty-download-message" id="emptyDownloadMessage" style="display:none;">
-      No characters added yet. Upload characters first!
-    </div>
-    <div style="margin-top:15px;">
-      <small>Click an image to download it.</small>
-    </div>
-  </div>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 let uploadedImages = [];
@@ -339,7 +249,6 @@ document.getElementById('img-upload').addEventListener('change', function(e) {
     reader.onload = function(evt) {
       uploadedImages.push(evt.target.result);
       renderUploaded();
-      renderDownloadCharMenu();
     };
     reader.readAsDataURL(file);
   }
@@ -356,67 +265,6 @@ function renderUploaded() {
     img.ondragstart = () => currentDragIndex = i;
     img.title = 'Drag to lineup';
     list.appendChild(img);
-  });
-}
-
-// --- Download Character Menu ---
-document.getElementById('open-download-menu').onclick = function() {
-  renderDownloadCharMenu();
-  document.getElementById('downloadCharMenu').classList.add('active');
-  document.body.style.overflow = 'hidden';
-};
-document.getElementById('closeDownloadMenu').onclick = function() {
-  document.getElementById('downloadCharMenu').classList.remove('active');
-  document.body.style.overflow = '';
-};
-// Close menu on outside click
-document.getElementById('downloadCharMenu').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-});
-
-function renderDownloadCharMenu() {
-  const imgDiv = document.getElementById('downloadCharImages');
-  const msg = document.getElementById('emptyDownloadMessage');
-  imgDiv.innerHTML = '';
-  if (uploadedImages.length === 0) {
-    msg.style.display = '';
-    return;
-  }
-  msg.style.display = 'none';
-  uploadedImages.forEach((src, i) => {
-    let thumb = document.createElement('img');
-    thumb.src = src;
-    thumb.className = 'download-char-thumb';
-    thumb.title = "Download this character";
-    // Download function
-    thumb.onclick = function() {
-      let link = document.createElement('a');
-      link.href = src;
-      link.download = `character${i+1}.png`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    };
-    imgDiv.appendChild(thumb);
-
-    // Look for the first slot to use as label (player name) if used in lineup
-    let foundLabel = '';
-    for (const [slotKey, imgSrc] of Object.entries(slotImages)) {
-      if (imgSrc === src && slotLabels[slotKey]) {
-        foundLabel = slotLabels[slotKey];
-        break;
-      }
-    }
-    // Show label if present
-    if (foundLabel) {
-      let label = document.createElement('div');
-      label.className = 'download-char-label';
-      label.innerText = foundLabel;
-      imgDiv.appendChild(label);
-    }
   });
 }
 
@@ -448,7 +296,6 @@ function makeLabel(label, onEdit) {
 }
 
 function getInitialLabels() {
-  // You can preset positions or make it blank
   return {
     '0': '', '1': '', '2': '', '3': '', '4': '', '5': '',
     'coach': '',
@@ -463,24 +310,19 @@ document.querySelectorAll('.drop-slot').forEach(slot => {
   slot.ondragleave = () => slot.classList.remove('dragover');
   slot.ondrop = function(e) {
     e.preventDefault(); slot.classList.remove('dragover');
-    // Drag from upload
     if (currentDragIndex !== null && uploadedImages[currentDragIndex]) {
       setSlotImage(slot, uploadedImages[currentDragIndex]);
     }
-    // Drag from slot to slot
     else if (window._draggingSlot && window._draggingSlot !== slot) {
       setSlotImage(slot, slotImages[window._draggingSlot.dataset.slot], slotLabels[window._draggingSlot.dataset.slot]);
       clearSlot(window._draggingSlot);
     }
     currentDragIndex = null;
     window._draggingSlot = null;
-    renderDownloadCharMenu(); // update menu if open
   };
-  // Allow dragging a slot image to another slot
   slot.addEventListener('mousedown', function(e) {
     if(e.target.classList.contains('char-img')) {
       window._draggingSlot = slot;
-      // For touch devices, set drag on long press
     }
   });
   renderSlot(slot);
@@ -502,28 +344,23 @@ function setSlotImage(slot, imgSrc, label) {
   };
   slot.appendChild(img);
 
-  // Add editable label
   let labelDiv = makeLabel(slotLabels[slotKey], val => {
     slotLabels[slotKey] = val;
     saveState();
-    renderDownloadCharMenu();
   });
   slot.appendChild(labelDiv);
 
-  // Slot-type label (restore)
   let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
   if (slotType) {
     slot.insertBefore(slotType, slot.firstChild);
   }
   saveState();
-  renderDownloadCharMenu();
 }
 function clearSlot(slot) {
   let slotKey = slot.dataset.slot;
   slot.innerHTML = '';
   slotImages[slotKey] = null;
   slotLabels[slotKey] = '';
-  // Restore slot label
   let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
   if (slotType) {
     slot.appendChild(slotType);
@@ -536,13 +373,11 @@ function renderSlot(slot) {
   if(slotImages[slotKey]) {
     setSlotImage(slot, slotImages[slotKey], slotLabels[slotKey]);
   } else {
-    // Restore slot-type label
     let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
     if (slotType) slot.appendChild(slotType);
   }
 }
 
-// --- Saving State (optional: for local autosave) ---
 function saveState() {
   let state = { slotLabels, slotImages };
   window.localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
@@ -557,22 +392,17 @@ function loadState() {
       document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
     } catch {}
   }
-  renderDownloadCharMenu();
 }
 loadState();
 
-// --- Reset ---
 function resetLineup() {
   slotLabels = getInitialLabels();
   slotImages = {};
   document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
   saveState();
-  renderDownloadCharMenu();
 }
 
-// --- Save as Image using html2canvas ---
 function saveLineup() {
-  // Hide upload and control UI
   document.querySelector('.menu-bar').style.visibility = "hidden";
   document.getElementById('upload-list').style.visibility = "hidden";
   html2canvas(document.getElementById('lineup-board'), {backgroundColor: null}).then(canvas => {
@@ -580,7 +410,6 @@ function saveLineup() {
     link.download = 'image.png';
     link.href = canvas.toDataURL();
     link.click();
-    // Restore UI
     document.querySelector('.menu-bar').style.visibility = "";
     document.getElementById('upload-list').style.visibility = "";
   });
