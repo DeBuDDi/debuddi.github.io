@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Friendly Buddies!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(90deg, #ffe066 0%, #ffb6b9 100%);
+      font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+      min-height: 100vh;
+      box-sizing: border-box;
+      color: #222;
+    }
+    .header {
+      text-align: center;
+      padding-top: 32px;
+      padding-bottom: 8px;
+    }
+    .header-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 15px;
+      object-fit: cover;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 2px solid #fff;
+      margin-bottom: 8px;
+    }
+    .main-title {
+      color: #f77fc5;
+      font-size: 2.2em;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .subtitle {
+      color: #7a6e50;
+      font-size: 1.15em;
+      margin-top: 0;
+      margin-bottom: 18px;
+    }
+    .navbar {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      background: #fffbe7;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      margin-bottom: 22px;
+      font-size: 1.13em;
+      padding: 12px 0;
+    }
+    .navbar a {
+      text-decoration: none;
+      color: #d48ad7;
+      background: none;
+      padding: 6px 18px;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background 0.14s, color 0.14s;
+    }
+    .navbar a.active, .navbar a:hover {
+      background: #fff6b3;
+      color: #f77fc5;
+    }
+    .content-bg {
+      background: linear-gradient(90deg, #fffbe7 0%, #ffd6e0 100%);
+      min-height: 600px;
+      padding: 32px 0;
+      display: flex;
+      justify-content: center;
+    }
+    .content {
+      max-width: 650px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.08);
+      padding: 32px 32px 28px 32px;
+      position: relative;
+      min-height: 400px;
+      border: 1.5px solid #fffbe7;
+    }
+    .content h2 {
+      font-size: 1.7em;
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: #2c2e44;
+    }
+    .content ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0 0 16px 0;
+    }
+    .content li {
+      margin-bottom: 6px;
+      font-size: 1.12em;
+    }
+    .emoji {
+      font-size: 1.2em;
+      margin-right: 6px;
+    }
+    .about-section b {
+      color: #2c2e44;
+    }
+    .pantun-card {
+      background: #f6ffdd;
+      border-radius: 16px;
+      padding: 18px 26px;
+      margin-top: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border-left: 6px solid #ffe066;
+    }
+    .pantun-title {
+      font-weight: bold;
+      color: #7f8c2a;
+      margin-bottom: 8px;
+      font-size: 1.07em;
+    }
+    .pantun-text {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1em;
+      color: #555;
+      margin-bottom: 8px;
+      white-space: pre-line;
+    }
+    .pantun-note {
+      color: #6d6d6d;
+      font-size: 1.02em;
+      margin-top: 7px;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 36px;
+      color: #b28d4c;
+      font-size: 1.3em;
+    }
+    .arrow-btn {
+      position: absolute;
+      top: 50%;
+      right: -38px;
+      background: #363339;
+      color: #fff;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7em;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.09);
+      border: none;
+      outline: none;
+      transform: translateY(-50%);
+      transition: background 0.15s;
+    }
+    .arrow-btn:hover {
+      background: #ffb6b9;
+    }
+    @media (max-width: 800px) {
+      .content { max-width: 97vw; padding: 18px 6vw 18px 6vw;}
+      .content-bg { padding: 14px 0;}
+      .header-img { width: 64px; height: 64px;}
+      .main-title { font-size: 1.35em;}
+      .navbar { gap: 12px; font-size: 1em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://avatars.githubusercontent.com/u/14818305?v=4" alt="User Avatar" class="header-img">
+    <div class="main-title">👋 Your Friendly Buddies!</div>
+    <div class="subtitle">Where boredom goes to die and creativity comes alive!</div>
+    <nav class="navbar">
+      <a href="#" class="active">Home</a>
+      <a href="#">Guide</a>
+      <a href="#">Video</a>
+      <a href="#">Support</a>
+    </nav>
+  </div>
+  <div class="content-bg">
+    <div class="content">
+      <h2><span class="emoji">🏠</span> Home</h2>
+      <ul>
+        <li><span class="emoji">🌟</span> <span class="about-section"><b>About me</b> Still boy, my bad!</span></li>
+        <li><span class="emoji">🌟</span> <span class="about-section"><b>Guess who?</b> I love her.</span></li>
+        <li><span class="emoji">🌟</span> <span class="about-section"><b>Who is DeBuDDi?</b> I like koala, it's cute like you.</span></li>
+      </ul>
+      <div class="pantun-card">
+        <div class="pantun-title">🚀 Pantun Sakedap!</div>
+        <div class="pantun-text">
+"he is my bro
+he eat comro
+he like poo poo
+he call you meo meo."
+        </div>
+        <div class="pantun-note">✨ You're friendly buddies.</div>
+      </div>
+      <button class="arrow-btn" title="Next">&#8594;</button>
+      <div class="footer">✨</div>
+    </div>
+  </div>
+</body>
+</html>
