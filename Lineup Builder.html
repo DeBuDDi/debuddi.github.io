@@ -169,26 +169,83 @@
     .bench-slot { border-style: dotted; border-color: #888; background: rgba(240,240,245,0.73);}
     .bench-label { background: #888; }
     .coach-label { background: #db3a3a;}
+    /* Fly High Button Styles */
+    .flyhigh-menu {
+      position: fixed;
+      top: 90px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .flyhigh-btn {
+      background: #e76f51;
+      color: #fff;
+      border: none;
+      border-radius: 13px;
+      padding: 11px 20px 11px 52px;
+      font-size: 1.05em;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #ffd70099;
+      cursor: pointer;
+      margin-bottom: 8px;
+      position: relative;
+      transition: background 0.16s;
+      font-family: 'Montserrat', Arial, sans-serif;
+      outline: none;
+      text-decoration: none;
+    }
+    .flyhigh-btn:hover {
+      background: #d35400;
+    }
+    .flyhigh-icon {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      transform: translateY(-50%);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fffbe6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 5px #ffe06680;
+    }
+    .flyhigh-icon img {
+      width: 21px; height: 21px;
+      display: block;
+    }
     @media (max-width: 950px) {
       .lineup-bg-wrapper { width: 99vw; height: 70vw; max-width: 99vw; max-height: 70vw;}
       .container { max-width: 99vw; }
+      .flyhigh-menu { right: 3vw; }
     }
   </style>
 </head>
 <body>
+<!-- Fly High Side Menu -->
+<div class="flyhigh-menu">
+  <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
+    <span class="flyhigh-icon" aria-hidden="true">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Volleyball_%28simple%29.svg" alt="HTTD" />
+    </span>
+    Character HTTD
+  </a>
+  <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
+    <span class="flyhigh-icon" aria-hidden="true">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Feather_icon.svg/32px-Feather_icon.svg.png" alt="Fly High" />
+    </span>
+    Character Fly High
+  </a>
+</div>
 <div class="container">
   <h1>Haikyuu Volleyball Lineup Builder</h1>
   <div class="menu-bar">
     <input type="file" id="img-upload" accept="image/*" multiple style="display: none"/>
     <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
     <button class="btn" onclick="resetLineup()">Reset Lineup</button>
-    <button class="btn" onclick="saveLineup()">Save Lineup</button>
-    <a
-      class="btn"
-      href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link"
-      target="_blank"
-      rel="noopener"
-      >Download Character HTTD</a>
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
@@ -237,7 +294,6 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 let uploadedImages = [];
 let currentDragIndex = null;
@@ -402,18 +458,6 @@ function resetLineup() {
   saveState();
 }
 
-function saveLineup() {
-  document.querySelector('.menu-bar').style.visibility = "hidden";
-  document.getElementById('upload-list').style.visibility = "hidden";
-  html2canvas(document.getElementById('lineup-board'), {backgroundColor: null}).then(canvas => {
-    let link = document.createElement('a');
-    link.download = 'image.png';
-    link.href = canvas.toDataURL();
-    link.click();
-    document.querySelector('.menu-bar').style.visibility = "";
-    document.getElementById('upload-list').style.visibility = "";
-  });
-}
 </script>
 </body>
 </html>
