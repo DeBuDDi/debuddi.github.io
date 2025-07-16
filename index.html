@@ -1,43 +1,326 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>👋 Your Friendly Buddies!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nama Kamu - Website Pribadi</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif">
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(120deg,#fffbe6 60%,#ffafcc 100%);
+      margin: 0;
+      padding: 0;
+    }
+    .banner {
+      background: linear-gradient(90deg, #ffe066 0%, #ffafcc 100%);
+      padding: 1em;
+      text-align: center;
+      box-shadow: 0 2px 12px #f9d7e6;
+    }
+    .banner h1 {
+      color:#ff69b4;
+      margin-top: .2em;
+      font-size: 2.2em;
+    }
+    .tab {
+      position: sticky;
+      top: 0;
+      background: #fffbe6;
+      z-index: 100;
+      border-bottom: 2px solid #ffe066;
+      box-shadow: 0 2px 8px rgba(255, 220, 110, 0.08);
+      display: flex;
+      justify-content: center;
+    }
+    .tab button {
+      background-color: inherit;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 1em 2em;
+      transition: background 0.25s, color 0.25s;
+      font-size: 1em;
+      font-weight: bold;
+      color: #ff69b4;
+    }
+    .tab button:hover, .tab button.active {
+      background: #ffec64;
+      color: #fff;
+      border-radius: 6px 6px 0 0;
+    }
+    .tabcontent {
+      display: none;
+      padding: 2em;
+      animation: pop-in 0.7s;
+      background: rgba(255,255,255,0.85);
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+      max-width: 740px;
+      box-shadow: 0 2px 16px #ffec64a0;
+    }
+    hr {
+      border:0;
+      height:2px;
+      background:linear-gradient(90deg,#ffe066,#ffafcc);
+      margin:2em 0;
+    }
+    .quick-start {
+      background: #f6ffd8;
+      border-radius: 10px;
+      padding: 1em 1.5em;
+      margin: 1em 0;
+      box-shadow: 0 2px 8px #ffe06644;
+    }
+    .quick-start pre {
+      background: #fffbe6;
+      padding: 0.8em;
+      border-radius: 7px;
+      font-size: 1em;
+      margin: 0.5em 0 0 0;
+    }
+    @keyframes pop-in {
+      0% { opacity: 0; transform: scale(0.8);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+    #mascot {
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      cursor:pointer;
+      z-index:200;
+      transition: transform 0.2s;
+    }
+    #mascot:hover {
+      transform: scale(1.15) rotate(-7deg);
+    }
+    @media (max-width: 600px) {
+      .tabcontent {padding: 1em;}
+      .tab button {padding: 0.4em 1em;}
+      .banner img {height: 40px;}
+      .banner h1 {font-size: 1.3em;}
+    }
+    /* Extra styles for Guide tab */
+    .guide-container { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; margin: 0 auto; max-width: 700px; padding: 2em;}
+    .guide-step { background: #fffae5; border-radius: 8px; margin: 1em 0; padding: 1em;}
+    .guide-emoji { font-size: 2em; vertical-align: middle;}
+    /* Extra styles for Support tab */
+    .support-container { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; margin: 0 auto; max-width: 700px; padding: 2em; }
+    .support-faq details { margin-bottom: 1em; }
+    /* Extra styles for Video tab */
+    .video-container { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; margin: 0 auto; max-width: 700px; padding: 2em;}
+    .yt-link { display:inline-block; margin-bottom:1em; text-decoration:none; }
+    .yt-link img { height:40px; vertical-align:middle; margin-right:10px; }
+    .yt-link span { font-size:1.3em; font-weight:bold; color:#ff0000; }
+    .video-embed { position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin:1em 0; }
+    .video-embed iframe { position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px; }
+  </style>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#guide">Guide</a></li>
-      <li><a href="#video">Video</a></li>
-      <li><a href="#support dbd">Donate</a></li>
+  <div class="banner">
+    <img src="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif" alt="Welcome Banner" style="height:80px;">
+    <h1>👋 Your Friendly Buddies!</h1>
+    <p>Where boredom goes to die and creativity comes alive!</p>
+  </div>
+
+  <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Home')" id="defaultOpen">Home</button>
+    <button class="tablinks" onclick="openTab(event, 'Guide')">Guide</button>
+    <button class="tablinks" onclick="openTab(event, 'Video')">Video</button>
+    <button class="tablinks" onclick="openTab(event, 'Support')">Support</button>
+  </div>
+
+  <!-- Home Tab -->
+  <div id="Home" class="tabcontent">
+    <h2>🏠 Home</h2>
+    <ul style="list-style:'🌟 ';font-size:1.1em;">
+      <li><strong>About me:</strong> Still boy, my bad!</li>
+      <li><strong>Guess who:</strong> I love her Ging.</li>
+      <li><strong>Who is DeBuDDi:</strong> I'm nothing. I'm just an NPC!</li>
     </ul>
-  </nav>
-  <section id="home">
-    <h1>Hola, it's me DeBuDDi</h1>
-    <p>Welcome to your friendly buddies!</p>
-  </section>
-  <section id="guide">
-    <h2>About Me</h2>
-    <p>I am a content creator interested in the internet and gaming.</p>
-  </section>
-  <section id="video">
-    <h2>Portfolio</h2>
-    <ul>
-      <li>Haikyu Fly High: <a href="https://youtube.com/playlist?list=PLb0j9HWmgbRug5pOt5nxvkJY0EJkLwpV6">Watch Here</li>
-      <li>Haikyu Fly High: <a href="https://youtube.com/playlist?list=PLb0j9HWmgbRug5pOt5nxvkJY0EJkLwpV6">Watch Here</li>
-      <li>Haikyu Fly High: <a href="https://youtube.com/playlist?list=PLb0j9HWmgbRug5pOt5nxvkJY0EJkLwpV6">Watch Here</li>
-    </ul>
-  </section>
-  <section id="support dbd">
-    <h2>Join US</h2>
-    <p>Discord: <a href="https://discord.gg/Dn83fJSk75">discord.gg/Dn83fJSk75</p>
-    <p>Donation/Donasi: <a href="https://linktr.ee/debuddihxh">linktr.ee/debuddihxh</a></p>
-  </section>
-  <footer>
-    <p>&copy; 2025 DeBuDDi</p>
-  </footer>
+    <div class="quick-start">
+      <h3>🚀 Poetry/Pantun!</h3>
+      <pre>
+      "he is my bro
+       he eat comro
+       he like poo poo
+       he call you meo meo."
+      </pre>
+      <p>🎉 You're friendly buddies.</p>
+    </div>
+    <hr>
+    <p style="text-align:center;font-size:1.3em;">✨</p>
+  </div>
+
+  <!-- Guide Tab -->
+  <div id="Guide" class="tabcontent">
+    <div class="guide-container">
+      <h1>📚 DeBuDDi Guide Zone!</h1>
+      <p style="text-align:center;">
+        Welcome, Buddy! This is where you can see all guide from debuddi, japan wiki, and our community. <span class="guide-emoji">🎉</span>
+      </p>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🚀</span> Quick Menu</h2>
+          <li>Haikyu!! Menu: <a href="https://debuddi.github.io/Haikyu!!.html">Haikyu!!</a></li>
+          <li>Lineup Builder TTD/Fly High: <a href="https://debuddi.github.io/Lineup%20Builder.html">Lineup Builder</a></li>
+          <li>Guide Menu: <a href="https://debuddi.github.io/guide.html">Guide</a></li>
+          <li>Video Menu: <a href="https://debuddi.github.io/video.html">Video</a></li>
+          <li>Suppport Menu: <a href="https://debuddi.github.io/support.html">Support</a></li>
+      </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🤝</span> How to Use DeBuDDi Github!</h2>
+        <ul>
+          <li>Quick menu to open page like debuddi.github.io/support.html or see the guide that will be posted on this GitHub later! <span class="guide-emoji">😆</span></li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🦸‍♂️</span> Need Help?</h2>
+        <ul>
+          <li>Ask for help in our <a href="https://discord.gg/Dn83fJSk75" target="_blank">Discord</a></li>
+          <li>Check the <a href="#Support" onclick="openTab(event, 'Support')">Support page</a> for FAQs and contact info</li>
+          <li>Or just open an issue on GitHub!</li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🌟</span> Stay Connected</h2>
+        <ul>
+          <li>Subscribe to our <a href="https://www.youtube.com/@DeBuDDi" target="_blank">YouTube channel</a></li>
+          <li>Share the project, invite your friends, and don't forget to ⭐️ us!</li>
+        </ul>
+      </div>
+      <hr>
+      <p style="text-align:center;font-size:1.2em;color:#ffa500;">Thanks for being a Buddy! 🎈</p>
+    </div>
+  </div>
+
+  <!-- Video Tab -->
+  <div id="Video" class="tabcontent">
+    <div class="video-container">
+      <h1>🎬 DeBuDDi: Your Friendly Buddies!</h1>
+      <p>
+        Welcome to DeBuDDi's official video!<br>
+        Explore our tutorials, gacha, livestreams, and gameplay content.<br>
+        <b>Subscribe</b> for the latest updates and join the DBD community!
+      </p>
+      <div style="text-align:center;">
+        <a href="https://www.youtube.com/@DeBuDDi" target="_blank" class="yt-link">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube Icon">
+          <span>Visit @DeBuDDi on YouTube</span>
+        </a>
+      <div class="video-embed" id="latest-video">
+  <iframe id="yt-latest-video" src="" title="Latest DeBuDDi Video"
+    frameborder="0" allowfullscreen></iframe>
+</div>
+<script>
+  // Replace with your API Key
+  const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
+  // Channel ID for DeBuDDi (from https://www.youtube.com/@DeBuDDi)
+  const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ';
+
+  // Get latest video ID and set iframe src
+  fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=1&type=video`)
+    .then(response => response.json())
+    .then(data => {
+      const latestVideoId = data.items[0].id.videoId;
+      document.getElementById('yt-latest-video').src = `https://www.youtube.com/embed/${latestVideoId}`;
+    })
+    .catch(error => {
+      document.getElementById('latest-video').innerHTML = 'Error loading latest video.';
+      console.error(error);
+    });
+</script>
+      </div>
+      <hr>
+      <p style="text-align:center;font-size:1.3em;color:#ffa500;">✨ Thanks for watching! ✨</p>
+    </div>
+  </div>
+
+  <!-- Support Tab -->
+  <div id="Support" class="tabcontent">
+    <div class="support-container">
+      <h1>🆘 DeBuDDi Support</h1>
+      <p>
+        Need help? You're in the right place! Here are some ways to get support and join our community:
+      </p>
+      <ul>
+        <li>
+          <b>Discord:</b> <a href="https://discord.gg/Dn83fJSk75" target="_blank">Join our Buddy Discord!</a>
+        </li>
+        <li>
+          <b>Donate/Support:</b> <a href="https://linktr.ee/debuddihxh" target="_blank">Support us here!</a>
+        </li>
+        <li>
+          <b>GitHub Issues:</b> <a href="https://github.com/DeBuDDi/debuddi.github.io/issues" target="_blank">Report a bug or suggest an idea</a>
+        </li>
+      </ul>
+      <hr>
+      <div class="support-faq">
+        <h2>Frequently Asked Questions</h2>
+        <details>
+          <summary>How do I get started with DeBuDDi?</summary>
+          <p>Check out our Guide tab or <a href="#Guide" onclick="openTab(event, 'Guide')">Guide page</a> for quick start instructions!</p>
+        </details>
+        <details>
+          <summary>How do I contribute?</summary>
+          <p>Fork the repo, send PRs, and don't forget to add a meme for good vibes!</p>
+        </details>
+        <details>
+          <summary>How can I get real-time help?</summary>
+          <p>Hop onto our Discord and say hi. The Buddies are always online!</p>
+        </details>
+        <details>
+          <summary>Want to donate or support Debuddi?</summary>
+          <p><a href="https://linktr.ee/debuddihxh" target="_blank">Donate/Support here!</a></p>
+        </details>
+      </div>
+      <hr>
+      <ul style="list-style:'💬 ';font-size:1.1em;">
+        <li><strong>Q:</strong> Are you F2P Player?<br>
+            <strong>A:</strong> Sure, never recharge/top up ingame</a>.
+        </li>
+        <li><strong>Q:</strong> How to play or download haikyuu game?<br>
+             <strong>A:</strong> KR/Japan version uses QooApp, and the SEA (English) version also uses QooApp if you are outside the SEA regions</a>.
+        </li>
+        <li><strong>Q:</strong> Can i play without Qooapp?<br>
+             <strong>A:</strong> Sure, you need to create a Play Store account for KR, JP, or SEA. See the tutorial here via <a href="https://youtu.be/AfAp--gYaUI?si=theDXlyI8eiJvYha" target="_blank">Create Account</a>.
+        </li>
+        <li><strong>Q:</strong> How to see Guide, Upcoming Banner or Tier list?<br>
+             <strong>A:</strong> You can visit <a href="https://linktr.ee/debuddihxh" target="_blank">Linktree DeBuDDi</a>.
+        </li>
+        <li><strong>Q:</strong> Where are you from?<br>
+             <strong>A:</strong> I'm from Indonesia</a>.
+        </li>
+        <li><strong>Q:</strong> How do i get emojis in the livestream chat??<br>
+             <strong>A:</strong> You can get an after join DBD membership via <a href="https://www.youtube.com/channel/UCVifvscpsdxwTWRXXnWsjYQ/join" target="_blank">Youtube Membership</a>.
+        </li>
+        <li>Questions or need help? Reach out via <a href="https://discord.gg/Dn83fJSk75" target="_blank">Discord</a>.</li>
+        <li>Want to donate or support debuddi? <a href="https://sociabuzz.com/debuddi" target="_blank">SociaBuzz Donate (master card/visa/ovo/QRIS/etc)!</a></li> or <a href="https://saweria.co/debuddi" target="_blank">Saweria Donate (No leaderboard)</a></li>
+      </ul>
+      <hr>
+      <p style="text-align:center;font-size:1.3em;">✨</p>
+    </div>
+  </div>
+
+  <script>
+    // Animated Tab Transitions
+    function openTab(evt, tabName) {
+      var tabcontent = document.getElementsByClassName("tabcontent");
+      for (let i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.opacity = "0";
+        tabcontent[i].style.transition = "opacity 0.4s";
+        tabcontent[i].style.display = "none";
+      }
+      var tablinks = document.getElementsByClassName("tablinks");
+      for (let i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      var current = document.getElementById(tabName);
+      current.style.display = "block";
+      setTimeout(() => { current.style.opacity = "1"; }, 30);
+      evt.currentTarget.className += " active";
+    }
+    document.getElementById("defaultOpen").click();
+  </script>
 </body>
 </html>
