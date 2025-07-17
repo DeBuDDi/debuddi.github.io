@@ -2,58 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DeBuDDi Support</title>
+  <title>Donation or Support DeBuDDi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif">
   <style>
-    body { font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif; background: #fffbe6; margin: 0; }
-    .container { max-width: 700px; margin: 2em auto; padding: 2em; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; }
-    h1 { color: #ff69b4; text-align: center; }
-    ul { font-size: 1.1em; }
-    li { margin-bottom: 1em; }
-    a { color: #ff007f; font-weight: bold; }
-    .faq details { margin-bottom: 1em; }
+    body {
+      font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+      background: linear-gradient(135deg, #164863 0%, #427D9D 100%);
+      margin: 0;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 420px;
+      margin: 48px auto 0 auto;
+      padding: 2.3em 1.5em;
+      background: rgba(255,255,255,0.97);
+      border-radius: 18px;
+      box-shadow: 0 6px 32px #16486340, 0 2px 6px #1111;
+    }
+    h1 {
+      color: #207dbb;
+      text-align: center;
+      font-size: 2em;
+      margin-top: 0;
+      letter-spacing: 1px;
+    }
+    .donate-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+      margin: 2.2em 0 1.2em 0;
+    }
+    .donate-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(90deg, #19a7ce 0%, #146c94 100%);
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.17em;
+      padding: 1em 0.8em;
+      border-radius: 9px;
+      text-decoration: none;
+      box-shadow: 0 2px 8px #053B5010;
+      transition: background 0.22s, transform 0.12s;
+    }
+    .donate-link:hover, .donate-link:focus {
+      background: linear-gradient(90deg, #146c94 0%, #19a7ce 100%);
+      transform: translateY(-2px) scale(1.03);
+      text-decoration: underline;
+    }
+    .donate-link img {
+      width: 28px;
+      height: 28px;
+      margin-right: 12px;
+      border-radius: 5px;
+      background: #fff;
+    }
+    .desc {
+      color: #18455d;
+      text-align: center;
+      font-size: 1.09em;
+      margin-bottom: 1.7em;
+      margin-top: 0.7em;
+    }
+    hr {
+      border: none;
+      border-top: 2px solid #207dbb33;
+      margin: 30px 0 18px 0;
+    }
+    .thanks {
+      text-align: center;
+      font-size: 1.17em;
+      color: #146c94;
+      margin-bottom: 0;
+    }
+    @media (max-width: 500px) {
+      .container { max-width: 97vw; padding: 1.2em 0.3em;}
+      h1 { font-size: 1.2em;}
+      .donate-link { font-size: 1em;}
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>🆘 DeBuDDi Support</h1>
-    <p>
-      Need help? You're in the right place! Here are some ways to get support and join our community:
+    <h1>💙 Donation or Support DeBuDDi</h1>
+    <p class="desc">
+      If you like DeBuDDi's guide or want to support future projects, you can do so through the following platforms. Every bit of support means a lot! 🙏
     </p>
-    <ul>
-      <li>
-        <b>Discord:</b> <a href="https://discord.gg/Dn83fJSk75" target="_blank">Join our Buddy Discord!</a>
-      </li>
-      <li>
-        <b>Donate/Support:</b> <a href="https://linktr.ee/debuddihxh" target="_blank">Support us here!</a>
-      </li>
-      <li>
-        <b>GitHub Issues:</b> <a href="https://github.com/DeBuDDi/debuddi.github.io/issues" target="_blank">Report a bug or suggest an idea</a>
-      </li>
-    </ul>
-    <hr>
-    <div class="faq">
-      <h2>Frequently Asked Questions</h2>
-      <details>
-        <summary>Q/A about the game</summary>
-        <p>Check the <a href="https://debuddi.github.io/#Support" onclick="openTab(event, 'Support')">Support page</a> for FAQs and contact info</p>
-      </details>
-      <details>
-        <summary>How do I contribute?</summary>
-        <p>Fork the repo, send PRs, and don't forget to add a meme for good vibes!</p>
-      </details>
-      <details>
-        <summary>How can I get real-time help?</summary>
-        <p>Hop onto our Discord and say hi. The Buddies are always online!</p>
-      </details>
-      <details>
-        <summary>Want to donate or support Debuddi?</summary>
-        <p><a href="https://linktr.ee/debuddihxh" target="_blank">Donate/Support here!</a></p>
-      </details>
+    <div class="donate-btns">
+      <a class="donate-link" href="https://sociabuzz.com/debuddi/tribe" target="_blank">
+        <img src="https://storage.sociabuzz.com/storage/img/sociabuzz_logo_square.png" alt="Sociabuzz"> Support via Sociabuzz
+      </a>
+      <a class="donate-link" href="https://saweria.co/debuddi" target="_blank">
+        <img src="https://image.fortuneidn.com/post/20230815/logo-with-stroke-6fab034efe82b1aa05a07d3cb6bbd6cc-49bf639c9d6af9294c9fdb7af06ed19a.jpg"> Donate via Saweria
+      </a>
+      <a class="donate-link" href="https://www.youtube.com/channel/UCtFQeF7VSLZXhAAE8gDKTzA/join" target="_blank">
+        <img src="https://i.postimg.cc/7hT7b0b0/30.png" alt="YouTube Membership"> YouTube Membership
+      </a>
     </div>
     <hr>
-    <p style="text-align:center;font-size:1.2em;color:#ffa500;">Thanks for being a Buddy! 🎈</p>
+    <p class="thanks">Thanks for being a Buddy! 🎈</p>
   </div>
 </body>
 </html>
