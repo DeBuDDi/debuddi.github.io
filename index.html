@@ -94,11 +94,68 @@
     #mascot:hover {
       transform: scale(1.15) rotate(-7deg);
     }
+    /* --- QR CODE styles --- */
+    .qr-left-container {
+      position: fixed;
+      top: 85px;
+      left: 0;
+      z-index: 150;
+      background: #fffbe6cc;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 2px 2px 12px #ffe06655;
+      padding: 18px 14px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .qr-left-container img {
+      display: block;
+      width: 110px;
+      height: 110px;
+      margin-bottom: 6px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #ffafcc60;
+      background: #fff;
+      border: 2px solid #ffe066;
+      transition: transform 0.2s;
+    }
+    .qr-left-container img:hover {
+      transform: scale(1.07);
+    }
+    .qr-caption {
+      font-size: 0.95em;
+      color: #b8860b;
+      text-align: center;
+      font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+      margin: 2px 0 0 0;
+    }
+    @media (max-width: 800px) {
+      .qr-left-container {
+        position: static;
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        border-radius: 0 0 12px 12px;
+        box-shadow: none;
+        background: #fffbe6bb;
+        margin: 0 0 10px 0;
+        padding: 10px 0 8px 0;
+      }
+      .qr-left-container img {
+        width: 85px;
+        height: 85px;
+      }
+      .qr-caption {
+        font-size: 0.93em;
+      }
+    }
     @media (max-width: 600px) {
       .tabcontent {padding: 1em;}
       .tab button {padding: 0.4em 1em;}
       .banner img {height: 40px;}
       .banner h1 {font-size: 1.3em;}
+      .qr-left-container img { width: 64px; height: 64px;}
+      .qr-left-container {padding: 6px 0 3px 0;}
     }
     /* Extra styles for Guide tab */
     .guide-container { background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; margin: 0 auto; max-width: 700px; padding: 2em;}
@@ -117,6 +174,16 @@
   </style>
 </head>
 <body>
+  <!-- QR Code on Left -->
+  <div class="qr-left-container">
+    <a href="https://sociabuzz.com/pro/tribe/qrcode/v2/2982131824" target="_blank" title="Support DeBuDDi via QRIS">
+      <img src="https://sociabuzz.com/pro/tribe/qrcode/v2/2982131824" alt="SociaBuzz QR Code" />
+    </a>
+    <div class="qr-caption">
+      <span>Support or Donate<br>via QRIS</span>
+    </div>
+  </div>
+
   <div class="banner">
     <img src="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif" alt="Welcome Banner" style="height:80px;">
     <h1>👋 Your Friendly Buddies!</h1>
