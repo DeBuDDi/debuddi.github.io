@@ -234,6 +234,28 @@
       border-color: #f9a602;
       background: #fffde7;
     }
+    .download-bar {
+      display: flex;
+      justify-content: center;
+      margin-top: 14px;
+      margin-bottom: -10px;
+    }
+    .download-btn {
+      background: #43a047;
+      color: #fff;
+      border: none;
+      padding: 8px 24px;
+      border-radius: 10px;
+      font-size: 1em;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #aac4e3;
+      font-family: 'Montserrat', Arial, sans-serif;
+      transition: background 0.17s;
+      text-decoration: none;
+      display: inline-block;
+      margin-left: 10px;
+    }
+    .download-btn:hover { background: #2e7031; }
   </style>
 </head>
 <body>
@@ -259,6 +281,9 @@
     <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
     <button class="btn" onclick="resetLineup()">Reset Lineup</button>
     <button class="btn" onclick="saveCurrentLineup()">Save Lineup</button>
+  </div>
+  <div class="download-bar" id="download-bar" style="display:none;">
+    <button class="download-btn" onclick="downloadLineup()">Download Lineup as PNG</button>
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
@@ -307,6 +332,8 @@
     </div>
   </div>
 </div>
+<!-- html2canvas via CDN for PNG export -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
 let uploadedImages = [];
 let currentDragIndex = null;
@@ -525,12 +552,33 @@ function resetLineup() {
   slotImages = {};
   document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
   saveState();
+  document.getElementById('download-bar').style.display = "none";
 }
 
 // --- Save Current Lineup Button (manual save) ---
 function saveCurrentLineup() {
   saveState();
   alert('Your current lineup, uploads, and edits have been saved!');
+  document.getElementById('download-bar').style.display = "flex";
+}
+
+// --- Download Lineup as PNG ---
+function downloadLineup() {
+  const board = document.getElementById('lineup-board');
+  // Remove focus state on any inputs (labels)
+  document.activeElement.blur();
+  html2canvas(board, {
+    backgroundColor: null,
+    useCORS: true,
+    scale: 2
+  }).then(function(canvas) {
+    let link = document.createElement('a');
+    link.download = "haikyuu_lineup.png";
+    link.href = canvas.toDataURL();
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => document.body.removeChild(link), 100);
+  });
 }
 </script>
 </body>
