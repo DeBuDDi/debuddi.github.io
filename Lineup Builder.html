@@ -57,6 +57,12 @@
       width: 65px; height: 85px; object-fit: cover;
       border: 2px solid #1976d2; border-radius: 7px; margin: 2px; cursor: grab;
       background: #fff; box-shadow: 0 1px 4px #aac4e3;
+      /* Touch highlight for selection on mobile */
+      transition: box-shadow 0.17s, border-color 0.17s;
+    }
+    .upload-thumb.selected {
+      box-shadow: 0 0 0 4px #ffd700;
+      border-color: #f9a602;
     }
     .lineup-bg-wrapper {
       position: relative;
@@ -96,7 +102,6 @@
       border-radius: 22px;
       pointer-events: none;
     }
-
     .drop-slot {
       position: absolute;
       width: 110px; height: 143px;
@@ -109,6 +114,7 @@
       text-align: center;
       transition: background 0.17s;
       z-index: 2;
+      touch-action: manipulation;
     }
     .drop-slot.dragover { background: #fff7b2; border-color: #f9a602; }
     .char-img {
@@ -222,6 +228,12 @@
       .container { max-width: 99vw; }
       .flyhigh-menu { right: 3vw; }
     }
+    /* --- Touch UI for mobile: slot highlight --- */
+    .drop-slot.touch-highlight {
+      box-shadow: 0 0 0 5px #ffd700;
+      border-color: #f9a602;
+      background: #fffde7;
+    }
   </style>
 </head>
 <body>
@@ -229,7 +241,7 @@
 <div class="flyhigh-menu">
   <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
     <span class="flyhigh-icon" aria-hidden="true">
-      <img src="https://play-lh.googleusercontent.com/AvPH7Xsu-gUK2hKCe2YGHjfLG57DVez6RdHKl4bAib8w-YxBHl9305WdSM4Nxj_15g" alt="HTTD" />
+      <img src="https://play-lh.googleusercontent.com/AvPH7Xsu-gUK2hKCe2YGHjfLG57DVez6RdHKl4eAib8w-YxBHl9305WdSM4Nxj_15g" alt="HTTD" />
     </span>
     Character HTTD
   </a>
@@ -298,6 +310,7 @@
 <script>
 let uploadedImages = [];
 let currentDragIndex = null;
+let selectedUploadIndex = null; // For touch/mobile selection
 
 // --- Upload Section ---
 document.getElementById('img-upload').addEventListener('change', function(e) {
@@ -318,10 +331,33 @@ function renderUploaded() {
   uploadedImages.forEach((src, i) => {
     let img = document.createElement('img');
     img.src = src;
-    img.className = 'upload-thumb';
+    img.className = 'upload-thumb' + (selectedUploadIndex === i ? ' selected' : '');
     img.draggable = true;
     img.ondragstart = () => currentDragIndex = i;
     img.title = 'Drag to lineup';
+
+    // --- Touch support for mobile: tap to select for assignment ---
+    img.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      if (selectedUploadIndex === i) {
+        // Deselect if already selected
+        selectedUploadIndex = null;
+      } else {
+        selectedUploadIndex = i;
+      }
+      renderUploaded(); // re-render highlight
+    });
+
+    // Desktop: click to select also works
+    img.addEventListener('click', function(e) {
+      if (selectedUploadIndex === i) {
+        selectedUploadIndex = null;
+      } else {
+        selectedUploadIndex = i;
+      }
+      renderUploaded();
+    });
+
     list.appendChild(img);
   });
 }
@@ -397,12 +433,40 @@ document.querySelectorAll('.drop-slot').forEach(slot => {
     }
     currentDragIndex = null;
     window._draggingSlot = null;
+    selectedUploadIndex = null; // Clear touch selection after drop
+    renderUploaded();
   };
   slot.addEventListener('mousedown', function(e) {
     if(e.target.classList.contains('char-img')) {
       window._draggingSlot = slot;
     }
   });
+
+  // --- Touch support: tap on slot to assign selected image ---
+  slot.addEventListener('touchstart', function(e) {
+    // Only assign if an image is selected and slot is empty or replaceable
+    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
+      e.preventDefault();
+      slot.classList.add('touch-highlight');
+      // Assign after short delay to show highlight
+      setTimeout(() => {
+        setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+        slot.classList.remove('touch-highlight');
+        selectedUploadIndex = null;
+        renderUploaded();
+      }, 120);
+    }
+  });
+
+  // Desktop: click on slot to assign selected image
+  slot.addEventListener('click', function(e) {
+    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
+      setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+      selectedUploadIndex = null;
+      renderUploaded();
+    }
+  });
+
   renderSlot(slot);
 });
 
