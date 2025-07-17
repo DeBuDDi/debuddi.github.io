@@ -2,65 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DeBuDDi Guide</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeBuDDi Guide Zone</title>
   <style>
-    body { font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif; background: #fffbe6; margin: 0; }
-    .container { max-width: 700px; margin: 2em auto; padding: 2em; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #ffec64a0; }
-    h1 { color: #ff69b4; text-align: center; }
-    ul { font-size: 1.1em; }
-    li { margin-bottom: 1em; }
-    a { color: #ff007f; font-weight: bold; }
-    .step { background: #fffae5; border-radius: 8px; margin: 1em 0; padding: 1em; }
-    .emoji { font-size: 2em; vertical-align: middle; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+    .guide-container {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      border-radius: 16px;
+      padding: 32px 30px 24px 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #ff9800;
+      font-size: 2.4em;
+      margin-top: 0;
+    }
+    .guide-step {
+      margin-bottom: 32px;
+      padding: 18px 18px 8px 18px;
+      background: #f5f7fa;
+      border-radius: 10px;
+      border-left: 6px solid #ffa500;
+    }
+    .guide-step h2 {
+      margin-top: 0;
+      color: #ffa500;
+      font-size: 1.35em;
+    }
+    ul, li {
+      font-size: 1.1em;
+      margin-bottom: 6px;
+    }
+    ul {
+      padding-left: 24px;
+    }
+    .guide-emoji {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    a {
+      color: #ff9800;
+      text-decoration: none;
+      transition: text-decoration 0.2s;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    hr {
+      border: none;
+      border-top: 2px solid #ffa50033;
+      margin: 32px 0 14px 0;
+    }
+    @media (max-width: 600px) {
+      .guide-container {
+        padding: 12px 2vw 8px 2vw;
+      }
+      h1 {
+        font-size: 1.4em;
+      }
+      .guide-step {
+        padding: 10px 7px 6px 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>📚 DeBuDDi Guide Zone!</h1>
-    <p style="text-align:center;">
-      Welcome, Buddy! This is your step-by-step guide to joining the fun, contributing, and making magic happen in our community. <span class="emoji">🎉</span>
-    </p>
-    <div class="step">
-      <h2><span class="emoji">🚀</span> Quick Start</h2>
-      <ul>
-        <li>Clone the repo:<br>
-          <code>git clone https://github.com/DeBuDDi/debuddi.github.io.git</code>
-        </li>
-        <li>Install dependencies:<br>
-          <code>npm install</code>
-        </li>
-        <li>Run locally:<br>
-          <code>npm start</code>
-        </li>
-      </ul>
+  <!-- Guide Tab -->
+  <div id="Guide" class="tabcontent">
+    <div class="guide-container">
+      <h1>📚 DeBuDDi Guide Zone!</h1>
+      <p style="text-align:center;">
+        Welcome, Buddy! This is where you can see all guide from debuddi, japan wiki, and our community. <span class="guide-emoji">🎉</span>
+      </p>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🚀</span> Quick Menu</h2>
+        <ul>
+          <li>Haikyu!! Menu: <a href="https://debuddi.github.io/Haikyu!!.html">Haikyu!!</a></li>
+          <li>Lineup Builder TTD/Fly High: <a href="https://debuddi.github.io/Lineup%20Builder.html">Lineup Builder</a></li>
+          <li>Guide Menu: <a href="https://debuddi.github.io/guide.html">Guide</a></li>
+          <li>Video Menu: <a href="https://debuddi.github.io/video.html">Video</a></li>
+          <li>Suppport Menu: <a href="https://debuddi.github.io/support.html">Support</a></li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🤝</span> How to Use DeBuDDi Github!</h2>
+        <ul>
+          <li>Quick menu to open page like debuddi.github.io/support.html or see the guide that will be posted on this GitHub later! <span class="guide-emoji">😆</span></li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🦸‍♂️</span> Need Help?</h2>
+        <ul>
+          <li>Ask for help in our <a href="https://discord.gg/Dn83fJSk75" target="_blank">Discord</a></li>
+          <li>Check the <a href="#Support" onclick="openTab(event, 'Support')">Support page</a> for FAQs and contact info</li>
+          <li>Or just open an issue on GitHub!</li>
+        </ul>
+      </div>
+      <div class="guide-step">
+        <h2><span class="guide-emoji">🌟</span> Stay Connected</h2>
+        <ul>
+          <li>Subscribe to our <a href="https://www.youtube.com/@DeBuDDi" target="_blank">YouTube channel</a></li>
+          <li>Share the project, invite your friends, and don't forget to ⭐️ us!</li>
+        </ul>
+      </div>
+      <hr>
+      <p style="text-align:center;font-size:1.2em;color:#ffa500;">Thanks for being a Buddy! 🎈</p>
     </div>
-    <div class="step">
-      <h2><span class="emoji">🤝</span> How to Contribute</h2>
-      <ul>
-        <li>Fork the repo and make your changes</li>
-        <li>Send a Pull Request—bonus points for adding a meme in your PR description! <span class="emoji">😆</span></li>
-        <li>Check out <a href="https://github.com/DeBuDDi/debuddi.github.io/issues">open issues</a> or suggest new ones!</li>
-      </ul>
-    </div>
-    <div class="step">
-      <h2><span class="emoji">🦸‍♂️</span> Need Help?</h2>
-      <ul>
-        <li>Ask for help in our <a href="https://discord.gg/Dn83fJSk75" target="_blank">Discord</a></li>
-        <li>Check the <a href="/Support">Support page</a> for FAQs and contact info</li>
-        <li>Or just open an issue on GitHub!</li>
-      </ul>
-    </div>
-    <div class="step">
-      <h2><span class="emoji">🌟</span> Stay Connected</h2>
-      <ul>
-        <li>Subscribe to our <a href="https://www.youtube.com/@DeBuDDi" target="_blank">YouTube channel</a></li>
-        <li>Share the project, invite your friends, and don't forget to ⭐️ us!</li>
-      </ul>
-    </div>
-    <hr>
-    <p style="text-align:center;font-size:1.2em;color:#ffa500;">Thanks for being a Buddy! 🎈</p>
   </div>
 </body>
 </html>
