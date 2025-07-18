@@ -1,83 +1,176 @@
-# OBS Studio: Panduan Lengkap & Tutorial Setting
-
-![Logo OBS Studio](https://obsproject.com/assets/images/new_icon_small_r.png)
-
-## Apa itu OBS Studio?
-
-OBS Studio (Open Broadcaster Software Studio) adalah aplikasi gratis dan open source untuk merekam layar serta melakukan siaran langsung (live streaming) ke berbagai platform seperti YouTube, Twitch, dan Facebook Live.
-
-### Fitur Utama:
-- **Perekaman & Streaming:** Rekam layar atau streaming secara langsung.
-- **Multiple Sources:** Gabungkan video, gambar, webcam, dan suara dalam satu layout.
-- **Scene:** Buat beberapa layout (scene) dan berpindah antar scene dengan mudah.
-- **Audio Mixer:** Kontrol dan filter suara dengan fitur audio mixer.
-- **Plugin:** Dukungan berbagai plugin untuk menambah fitur.
-
----
-
-## Cara Setting OBS Studio
-
-### 1. Download & Instal OBS Studio
-- Kunjungi [https://obsproject.com/](https://obsproject.com/) dan unduh sesuai OS Anda (Windows/Mac/Linux).
-- Instal seperti biasa.
-
-### 2. Menambahkan Sumber (Source)
-1. Buka OBS Studio.
-2. Pada panel **Sources**, klik tombol **"+"**.
-3. Pilih sumber:
-   - **Display Capture**: Merekam seluruh layar.
-   - **Window Capture**: Merekam aplikasi tertentu.
-   - **Video Capture Device**: Webcam.
-   - **Image**: Menambah gambar.
-
-![Tampilan OBS Studio](https://obsproject.com/images/blog/obs-studio-main-window.png)
-
-### 3. Membuat & Mengatur Scene
-- Scene adalah layout yang bisa diatur dan digunakan bergantian.
-- Klik **"+"** di panel **Scenes** untuk membuat scene baru.
-- Tambahkan source sesuai kebutuhan.
-
-### 4. Setting Audio
-- Di bawah panel audio mixer, pastikan mikrofon & audio desktop terdeteksi.
-- Atur volume dan filter dengan klik ikon gear pada sumber audio.
-
-### 5. Pengaturan Output (Resolusi & Kualitas)
-1. Masuk ke **Settings** (pojok kanan bawah).
-2. Buka menu **Output**:
-   - Pilih mode **Simple** (pemula).
-   - Atur **Video Bitrate** (contoh: 2500-4000 kbps untuk 720p/1080p).
-   - Pilih **Encoder** (x264 untuk CPU, NVENC/AMD untuk GPU).
-
-### 6. Pengaturan Video
-- Masuk ke **Settings > Video**:
-  - Atur **Base (Canvas) Resolution** sesuai layar.
-  - Atur **Output (Scaled) Resolution** sesuai kebutuhan.
-  - Pilih **FPS** (Frame per Second), biasanya 30 atau 60.
-
-### 7. Setting Streaming
-- Masuk ke **Settings > Stream**:
-  - Pilih platform (YouTube/Twitch/Facebook).
-  - Masukkan **Stream Key** dari platform.
-
-![Pengaturan Streaming](https://cdn.mos.cms.futurecdn.net/8vH4K7Quk7E3R9eKU8FJ5G-650-80.png)
-
-### 8. Mulai Merekam atau Streaming
-- Klik **Start Recording** untuk merekam.
-- Klik **Start Streaming** untuk siaran langsung.
-
----
-
-## Contoh Interface OBS Studio
-
-![Interface OBS Studio](https://www.softwarehow.com/wp-content/uploads/OBS-Studio-Basic-Interface.jpg)
-
----
-
-## Tips Tambahan
-- Gunakan **Studio Mode** untuk persiapan scene sebelum live.
-- Coba plugin untuk fitur tambahan.
-- Simpan konfigurasi dengan **Profile** & **Scene Collection**.
-
----
-
-**Jika ada pertanyaan atau ingin tutorial video, silakan tinggalkan komentar di bawah!**
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panduan Lengkap OBS Studio</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #181818;
+      color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #282c34;
+      padding: 30px 0 20px 0;
+      text-align: center;
+    }
+    header img {
+      width: 80px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin: 0.2em 0;
+      color: #ff9900;
+    }
+    h2, h3 {
+      color: #ffca28;
+      margin-top: 1.5em;
+    }
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 30px;
+      background: #222;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    img {
+      display: block;
+      margin: 18px auto;
+      max-width: 90%;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    ul, ol {
+      padding-left: 1.5em;
+    }
+    code, pre {
+      background: #333;
+      color: #ffe082;
+      border-radius: 5px;
+      padding: 2px 6px;
+    }
+    a {
+      color: #ffca28;
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      padding: 30px 0 20px 0;
+      font-size: 1em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://obsproject.com/assets/images/new_icon_small_r.png" alt="OBS Studio Logo">
+    <h1>Panduan OBS Studio <br> Lengkap + Tutorial Gambar</h1>
+    <div>by <a href="https://github.com/jaliwir" target="_blank" rel="noopener">jaliwir</a></div>
+  </header>
+  <main>
+    <h2>Apa itu OBS Studio?</h2>
+    <p>
+      <b>OBS Studio</b> (Open Broadcaster Software Studio) adalah aplikasi gratis dan open source untuk merekam layar serta melakukan siaran langsung (live streaming) ke berbagai platform seperti YouTube, Twitch, dan Facebook Live.
+    </p>
+    <h3>Fitur Utama:</h3>
+    <ul>
+      <li><b>Perekaman & Streaming:</b> Rekam layar atau streaming secara langsung.</li>
+      <li><b>Multiple Sources:</b> Gabungkan video, gambar, webcam, dan suara dalam satu layout.</li>
+      <li><b>Scene:</b> Buat beberapa layout (scene) dan berpindah antar scene dengan mudah.</li>
+      <li><b>Audio Mixer:</b> Kontrol dan filter suara dengan fitur audio mixer.</li>
+      <li><b>Plugin:</b> Dukungan berbagai plugin untuk menambah fitur.</li>
+    </ul>
+    <hr>
+    <h2>Cara Setting OBS Studio</h2>
+    <h3>1. Download & Instal OBS Studio</h3>
+    <ol>
+      <li>Kunjungi <a href="https://obsproject.com/" target="_blank">obsproject.com</a> dan unduh sesuai OS Anda (Windows/Mac/Linux).</li>
+      <li>Instal seperti biasa.</li>
+    </ol>
+    <h3>2. Menambahkan Sumber (Source)</h3>
+    <ol>
+      <li>Buka OBS Studio.</li>
+      <li>Pada panel <b>Sources</b>, klik tombol <code>+</code>.</li>
+      <li>
+        Pilih sumber:
+        <ul>
+          <li><b>Display Capture:</b> Merekam seluruh layar.</li>
+          <li><b>Window Capture:</b> Merekam aplikasi tertentu.</li>
+          <li><b>Video Capture Device:</b> Webcam.</li>
+          <li><b>Image:</b> Menambah gambar.</li>
+        </ul>
+      </li>
+    </ol>
+    <img src="https://obsproject.com/images/blog/obs-studio-main-window.png" alt="Tampilan OBS Studio">
+    <h3>3. Membuat & Mengatur Scene</h3>
+    <ul>
+      <li>Scene adalah layout yang bisa diatur dan digunakan bergantian.</li>
+      <li>Klik <code>+</code> di panel <b>Scenes</b> untuk membuat scene baru.</li>
+      <li>Tambahkan source sesuai kebutuhan.</li>
+    </ul>
+    <h3>4. Setting Audio</h3>
+    <ul>
+      <li>Di bawah panel audio mixer, pastikan mikrofon & audio desktop terdeteksi.</li>
+      <li>Atur volume dan filter dengan klik ikon gear pada sumber audio.</li>
+    </ul>
+    <h3>5. Pengaturan Output (Resolusi & Kualitas)</h3>
+    <ol>
+      <li>Masuk ke <b>Settings</b> (pojok kanan bawah).</li>
+      <li>Buka menu <b>Output</b>:
+        <ul>
+          <li>Pilih mode <b>Simple</b> (pemula).</li>
+          <li>Atur <b>Video Bitrate</b> (contoh: 2500-4000 kbps untuk 720p/1080p).</li>
+          <li>Pilih <b>Encoder</b> (<code>x264</code> untuk CPU, <code>NVENC/AMD</code> untuk GPU).</li>
+        </ul>
+      </li>
+    </ol>
+    <h3>6. Pengaturan Video</h3>
+    <ul>
+      <li>Masuk ke <b>Settings &gt; Video</b>:
+        <ul>
+          <li>Atur <b>Base (Canvas) Resolution</b> sesuai layar.</li>
+          <li>Atur <b>Output (Scaled) Resolution</b> sesuai kebutuhan.</li>
+          <li>Pilih <b>FPS</b> (Frame per Second), biasanya 30 atau 60.</li>
+        </ul>
+      </li>
+    </ul>
+    <h3>7. Setting Streaming</h3>
+    <ul>
+      <li>Masuk ke <b>Settings &gt; Stream</b>:
+        <ul>
+          <li>Pilih platform (YouTube/Twitch/Facebook).</li>
+          <li>Masukkan <b>Stream Key</b> dari platform.</li>
+        </ul>
+      </li>
+    </ul>
+    <img src="https://cdn.mos.cms.futurecdn.net/8vH4K7Quk7E3R9eKU8FJ5G-650-80.png" alt="Pengaturan Streaming OBS Studio">
+    <h3>8. Mulai Merekam atau Streaming</h3>
+    <ul>
+      <li>Klik <b>Start Recording</b> untuk merekam.</li>
+      <li>Klik <b>Start Streaming</b> untuk siaran langsung.</li>
+    </ul>
+    <hr>
+    <h2>Contoh Interface OBS Studio</h2>
+    <img src="https://www.softwarehow.com/wp-content/uploads/OBS-Studio-Basic-Interface.jpg" alt="Interface OBS Studio">
+    <hr>
+    <h2>Tips Tambahan</h2>
+    <ul>
+      <li>Gunakan <b>Studio Mode</b> untuk persiapan scene sebelum live.</li>
+      <li>Coba plugin untuk fitur tambahan.</li>
+      <li>Simpan konfigurasi dengan <b>Profile</b> & <b>Scene Collection</b>.</li>
+    </ul>
+    <hr>
+    <p>
+      <b>Jika ada pertanyaan atau ingin tutorial video, silakan tinggalkan komentar di repository ini!</b>
+    </p>
+  </main>
+  <footer>
+    &copy; 2025 <a href="https://github.com/jaliwir" target="_blank" rel="noopener">jaliwir</a> &mdash; Powered by GitHub Pages
+  </footer>
+</body>
+</html>
