@@ -13,7 +13,7 @@ Whether you want to browse cool guides, watch awesome videos, or get support, yo
 ## 🏠 Home
 
 - 🌟 **About me:** Still boy, my bad!
-- 🐱 **Guess who:** I love her Ging.
+- 🐱 **Guess who:** I love her.
 - 🎨 **Who is DeBuDDi:** I'm nothing. I'm just an NPC!
 
 ---
