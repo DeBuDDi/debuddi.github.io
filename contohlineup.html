@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Haikyuu Volleyball Lineup Builder</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <style>
+    /* ...[existing styles unchanged]... */
+    /* --- Add modal styles --- */
+    .modal-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.22);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-bg.active { display: flex; }
+    .modal-content {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 40px #aac4e3;
+      padding: 30px 26px 18px 26px;
+      min-width: 330px;
+      max-width: 92vw;
+      max-height: 90vh;
+      overflow-y: auto;
+      text-align: center;
+      position: relative;
+    }
+    .modal-title {
+      font-size: 1.35em;
+      font-weight: 700;
+      color: #1976d2;
+      margin-bottom: 12px;
+    }
+    .modal-close {
+      position: absolute;
+      top: 8px; right: 16px;
+      background: none;
+      border: none;
+      color: #db3a3a;
+      font-size: 1.7em;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .modal-img-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .modal-thumb {
+      width: 75px; height: 99px; object-fit: cover;
+      border: 2px solid #1976d2;
+      border-radius: 7px;
+      margin: 2px;
+      cursor: pointer;
+      background: #fff;
+      box-shadow: 0 1px 4px #aac4e3;
+      transition: box-shadow 0.17s, border-color 0.17s;
+    }
+    .modal-thumb:hover {
+      box-shadow: 0 0 0 5px #ffd700;
+      border-color: #f9a602;
+      z-index: 2;
+    }
+    .modal-thumb.selected {
+      box-shadow: 0 0 0 4px #ffd700;
+      border-color: #f9a602;
+    }
+  </style>
+</head>
+<body>
+<!-- Fly High Side Menu -->
+<!-- [existing menu unchanged] -->
+<div class="container">
+  <!-- [existing content unchanged] -->
+</div>
+<!-- Modal for selecting images from httd files -->
+<div class="modal-bg" id="img-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-title">Select Character Image</div>
+    <div id="modal-img-list" class="modal-img-list"></div>
+  </div>
+</div>
+<!-- html2canvas via CDN for PNG export -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+let uploadedImages = [];
+let currentDragIndex = null;
+let selectedUploadIndex = null; // For touch/mobile selection
+
+// ---- Load remote images from httd folder ----
+let httdImages = [];
+// Change this URL if you move files. It must point to a public GitHub folder (raw or via API).
+const httdFilesApi = 'https://api.github.com/repos/DeBuDDi/debuddi.github.io/contents/httd';
+
+// Get all image URLs from the httd folder on GitHub
+function fetchHttdImages() {
+  fetch(httdFilesApi)
+    .then(r => r.json())
+    .then(list => {
+      httdImages = list
+        .filter(item => item.type === 'file' && /\.(png|jpg|jpeg|gif|webp)$/i.test(item.name))
+        .map(item => item.download_url);
+      // If modal is already open, render images
+      if (document.getElementById('img-modal').classList.contains('active'))
+        renderModalImages();
+    });
+}
+// Fetch once on page load
+fetchHttdImages();
+
+// --- Upload Section ---
+// [existing upload code unchanged]
+
+// --- Modal functions ---
+function openModal(slot) {
+  document.getElementById('img-modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  window._modalSlot = slot;
+  renderModalImages();
+}
+function closeModal() {
+  document.getElementById('img-modal').classList.remove('active');
+  document.body.style.overflow = '';
+  window._modalSlot = null;
+}
+function renderModalImages() {
+  const modalList = document.getElementById('modal-img-list');
+  modalList.innerHTML = '';
+  httdImages.forEach((src, idx) => {
+    let img = document.createElement('img');
+    img.src = src;
+    img.className = 'modal-thumb';
+    img.title = src.split('/').pop();
+    img.onclick = () => {
+      if (window._modalSlot) {
+        setSlotImage(window._modalSlot, src);
+        closeModal();
+      }
+    };
+    modalList.appendChild(img);
+  });
+  if (httdImages.length === 0) {
+    modalList.innerHTML = '<div style="color:#888;padding:10px;">No images found in <b>httd</b> folder.</div>';
+  }
+}
+
+// --- Drag & Drop for Lineup Slots ---
+// [existing drag & drop code unchanged except for the following changes]
+document.querySelectorAll('.drop-slot').forEach(slot => {
+  slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
+  slot.ondragleave = () => slot.classList.remove('dragover');
+  slot.ondrop = function(e) {
+    e.preventDefault(); slot.classList.remove('dragover');
+    if (currentDragIndex !== null && uploadedImages[currentDragIndex]) {
+      setSlotImage(slot, uploadedImages[currentDragIndex]);
+    }
+    else if (window._draggingSlot && window._draggingSlot !== slot) {
+      setSlotImage(slot, slotImages[window._draggingSlot.dataset.slot], slotLabels[window._draggingSlot.dataset.slot]);
+      clearSlot(window._draggingSlot);
+    }
+    currentDragIndex = null;
+    window._draggingSlot = null;
+    selectedUploadIndex = null; // Clear touch selection after drop
+    renderUploaded();
+  };
+  slot.addEventListener('mousedown', function(e) {
+    if(e.target.classList.contains('char-img')) {
+      window._draggingSlot = slot;
+    }
+  });
+
+  // --- Touch support: tap on slot to assign selected image ---
+  slot.addEventListener('touchstart', function(e) {
+    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
+      e.preventDefault();
+      slot.classList.add('touch-highlight');
+      setTimeout(() => {
+        setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+        slot.classList.remove('touch-highlight');
+        selectedUploadIndex = null;
+        renderUploaded();
+      }, 120);
+      return;
+    }
+    // If no uploaded image selected, open modal to pick from httd folder
+    e.preventDefault();
+    openModal(slot);
+  });
+
+  // Desktop: click on slot to assign selected image OR open modal for httd images
+  slot.addEventListener('click', function(e) {
+    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
+      setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+      selectedUploadIndex = null;
+      renderUploaded();
+      return;
+    }
+    // If no uploaded image selected, open modal to pick from httd folder
+    openModal(slot);
+  });
+
+  renderSlot(slot);
+});
+
+// [rest of script unchanged: setSlotImage, clearSlot, renderSlot, resetLineup, saveCurrentLineup, downloadLineup, etc.]
+</script>
+</body>
+</html>
