@@ -83,19 +83,10 @@
 <script>
 /* --- BEGIN HTTD IMAGE SELECTOR INTEGRATION --- */
 const HTTD_IMAGE_PATH = "https://raw.githubusercontent.com/DeBuDDi/debuddi.github.io/d005673a24dfdbef5400400c1b4793a520a9dd9b/httd/";
-const httdImageFiles = [
-  "1.png",
-  "2.png",
-  "3.png",
-  "4.png",
-  "5.png",
-  "6.png",
-  "7.png",
-  "8.png",
-  "9.png",
-  "10.png",
-  // Add more if needed, e.g. "11.png"
-];
+
+// Generate an array for "1.png" to "400.png"
+const httdImageFiles = Array.from({length: 400}, (_, i) => `${i + 1}.png`);
+
 let httdImages = httdImageFiles.map(filename => HTTD_IMAGE_PATH + filename);
 let showingHTTD = false;
 /* --- END HTTD IMAGE SELECTOR INTEGRATION --- */
