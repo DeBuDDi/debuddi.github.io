@@ -20,17 +20,14 @@ const httdImageFiles = [
 ];
 
 // Preload HTTD images and add to uploadedImages list if not already present
-function loadHTTDImages() {
-  httdImages = httdImageFiles.map(filename => HTTD_IMAGE_PATH + filename);
-  // Only add if not already present in uploadedImages
-  httdImages.forEach(src => {
-    if (!uploadedImages.includes(src)) {
-      uploadedImages.push(src);
-    }
-  });
-  renderUploaded();
-  saveState();
-}
+   document.querySelectorAll('.drop-slot').forEach(slot => {
+      slot.addEventListener('click', function(e) {
+         const slotKey = slot.dataset.slot;
+         if (!slotImages[slotKey]) {
+           loadHTTDImages();
+         }
+      });
+   });
 
 // Optionally, you can call loadHTTDImages() on initial load or when user selects an empty slot
 // For best UX, auto-load on startup:
