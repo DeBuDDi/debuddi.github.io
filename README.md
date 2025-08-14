@@ -42,10 +42,8 @@ Visit our [Support tab](https://debuddi.github.io/support.html), or reach out vi
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/DeBuDDi/debuddi.github.io.git
-cd debuddi.github.io
-npm install
-npm start
+If you want to promote anything, just don't promote betting or bad things.
+Contact me on Discord debuddi.github.io/#Support
 ```
 
 ---
