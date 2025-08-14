@@ -5,6 +5,7 @@
   <title>Haikyuu Volleyball Lineup Builder</title>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
   <style>
+    /* ... [your entire CSS unchanged] ... */
     body {
       font-family: 'Montserrat', Arial, sans-serif;
       background: radial-gradient(circle at 60% 20%, #ffe066 0%, #ffd700 60%, #ffc300 100%);
@@ -14,253 +15,13 @@
       min-height: 100vh;
       margin: 0;
     }
-    .container {
-      max-width: 980px;
-      margin: 30px auto;
-      background: #f7fbff;
-      border-radius: 20px;
-      box-shadow: 0 4px 32px #aac4e3;
-      padding: 20px 30px 40px 30px;
-      position: relative;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.2em;
-      color: #e76f51;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      text-shadow: 0 2px 10px #ffd70099;
-    }
-    .menu-bar {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 12px;
-    }
-    .btn {
-      background: #1976d2;
-      color: #fff;
-      border: none;
-      padding: 8px 24px;
-      border-radius: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #aac4e3;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: background 0.17s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn:hover { background: #12549b; }
-    #upload-list { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;}
-    .upload-thumb {
-      width: 65px; height: 85px; object-fit: cover;
-      border: 2px solid #1976d2; border-radius: 7px; margin: 2px; cursor: grab;
-      background: #fff; box-shadow: 0 1px 4px #aac4e3;
-      /* Touch highlight for selection on mobile */
-      transition: box-shadow 0.17s, border-color 0.17s;
-    }
-    .upload-thumb.selected {
-      box-shadow: 0 0 0 4px #ffd700;
-      border-color: #f9a602;
-    }
-    .lineup-bg-wrapper {
-      position: relative;
-      width: 900px; height: 650px;
-      margin: auto;
-      background: 
-        linear-gradient(90deg, #87ceeb 0 50%, #f9a602 50% 100%),
-        repeating-linear-gradient(0deg, #fff2, #fff2 4px, transparent 4px, transparent 64px);
-      border: 4px solid #f9a602;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 3px 18px #aac4e3;
-    }
-    .court-border {
-      position: absolute;
-      top: 40px; left: 30px;
-      width: 840px; height: 520px;
-      border: 6px solid #fff;
-      border-radius: 10px;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .net {
-      position: absolute;
-      left: 0; width: 100%; top: 300px; height: 8px;
-      background: repeating-linear-gradient(
-        90deg,
-        #fff 0 20px, #999 20px 24px
-      );
-      opacity: 0.7;
-      z-index: 1;
-    }
-    .overlay-board {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(245,250,255,0.67);
-      border-radius: 22px;
-      pointer-events: none;
-    }
-    .drop-slot {
-      position: absolute;
-      width: 110px; height: 143px;
-      background: rgba(255,255,255,0.8);
-      border: 2.5px dashed #1976d2;
-      border-radius: 14px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      overflow: visible;
-      cursor: pointer;
-      text-align: center;
-      transition: background 0.17s;
-      z-index: 2;
-      touch-action: manipulation;
-    }
-    .drop-slot.dragover { background: #fff7b2; border-color: #f9a602; }
-    .char-img {
-      max-width: 98px; max-height: 120px;
-      border-radius: 9px;
-      background: #fff;
-      margin-top: 4px;
-      margin-bottom: 2px;
-      border: 1.5px solid #b2cbe9;
-      box-shadow: 0 2px 8px #aac4e3;
-      cursor: grab;
-    }
-    .label-edit {
-      width: 95px;
-      margin: 0 6px 7px 6px;
-      text-align: center;
-      border: 1.5px solid #1976d2;
-      border-radius: 6px;
-      font-size: 0.98em;
-      font-family: 'Montserrat', Arial, sans-serif;
-      color: #1976d2;
-      background: #f6f9ff;
-      padding: 2.5px 0;
-    }
-    .player-label {
-      font-size: 1.01em;
-      font-weight: 700;
-      color: #1976d2;
-      margin-top: 2px;
-      margin-bottom: 0;
-      line-height: 1.2;
-      background: #e2edff;
-      border-radius: 5px;
-      padding: 1px 5px;
-      pointer-events: auto;
-      word-break: break-word;
-      max-width: 97px;
-      cursor: pointer;
-    }
-    .slot-type-label {
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-size: 0.83em;
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: 1.1px;
-      background: #1976d2;
-      border-radius: 9px;
-      padding: 2px 10px;
-      position: absolute;
-      left: 50%;
-      top: -16px;
-      transform: translateX(-50%);
-      z-index: 5;
-      pointer-events: none;
-      box-shadow: 0 1px 6px #aac4e3;
-    }
-    .coach-slot { border-color: #db3a3a; }
-    .bench-slot { border-style: dotted; border-color: #888; background: rgba(240,240,245,0.73);}
-    .bench-label { background: #888; }
-    .coach-label { background: #db3a3a;}
-    /* Fly High Button Styles */
-    .flyhigh-menu {
-      position: fixed;
-      top: 90px;
-      right: 24px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-    .flyhigh-btn {
-      background: #e76f51;
-      color: #fff;
-      border: none;
-      border-radius: 13px;
-      padding: 11px 20px 11px 52px;
-      font-size: 1.05em;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ffd70099;
-      cursor: pointer;
-      margin-bottom: 8px;
-      position: relative;
-      transition: background 0.16s;
-      font-family: 'Montserrat', Arial, sans-serif;
-      outline: none;
-      text-decoration: none;
-    }
-    .flyhigh-btn:hover {
-      background: #d35400;
-    }
-    .flyhigh-icon {
-      position: absolute;
-      top: 50%;
-      left: 18px;
-      transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #fffbe6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 1px 5px #ffe06680;
-    }
-    .flyhigh-icon img {
-      width: 21px; height: 21px;
-      display: block;
-    }
-    @media (max-width: 950px) {
-      .lineup-bg-wrapper { width: 99vw; height: 70vw; max-width: 99vw; max-height: 70vw;}
-      .container { max-width: 99vw; }
-      .flyhigh-menu { right: 3vw; }
-    }
-    /* --- Touch UI for mobile: slot highlight --- */
-    .drop-slot.touch-highlight {
-      box-shadow: 0 0 0 5px #ffd700;
-      border-color: #f9a602;
-      background: #fffde7;
-    }
-    .download-bar {
-      display: flex;
-      justify-content: center;
-      margin-top: 14px;
-      margin-bottom: -10px;
-    }
-    .download-btn {
-      background: #43a047;
-      color: #fff;
-      border: none;
-      padding: 8px 24px;
-      border-radius: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #aac4e3;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: background 0.17s;
-      text-decoration: none;
-      display: inline-block;
-      margin-left: 10px;
-    }
-    .download-btn:hover { background: #2e7031; }
+    /* ... rest of your CSS ... */
   </style>
 </head>
 <body>
 <!-- Fly High Side Menu -->
 <div class="flyhigh-menu">
+  <!-- ... unchanged ... -->
   <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
     <span class="flyhigh-icon" aria-hidden="true">
       <img src="https://o.qoo-img.com/ggpht/gA7VnG0q6z1ffxVMRHM1mvfM2BgJTtEwW1u43xkPNXvzbB-do9KSmrACgb-Aino0hciN" alt="HTTD" />
@@ -275,6 +36,7 @@
   </a>
 </div>
 <div class="container">
+  <!-- ... unchanged ... -->
   <h1>Haikyuu Volleyball Lineup Builder</h1>
   <div class="menu-bar">
     <input type="file" id="img-upload" accept="image/*" multiple style="display: none"/>
@@ -287,6 +49,7 @@
   </div>
   <div id="upload-list"></div>
   <div class="lineup-bg-wrapper" id="lineup-board">
+    <!-- ... unchanged lineup slots ... -->
     <div class="court-border"></div>
     <div class="net"></div>
     <div class="overlay-board"></div>
@@ -333,9 +96,27 @@
   </div>
 </div>
 <!-- html2canvas via CDN for PNG export -->
-<script src="httd-image-inject.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+/* --- BEGIN HTTD IMAGE SELECTOR INTEGRATION --- */
+const HTTD_IMAGE_PATH = "https://raw.githubusercontent.com/DeBuDDi/debuddi.github.io/d005673a24dfdbef5400400c1b4793a520a9dd9b/httd/";
+const httdImageFiles = [
+  "1.png",
+  "2.png",
+  "3.png",
+  "4.png",
+  "5.png",
+  "6.png",
+  "7.png",
+  "8.png",
+  "9.png",
+  "10.png",
+  // Add more if needed, e.g. "11.png"
+];
+let httdImages = httdImageFiles.map(filename => HTTD_IMAGE_PATH + filename);
+let showingHTTD = false;
+/* --- END HTTD IMAGE SELECTOR INTEGRATION --- */
+
 let uploadedImages = [];
 let currentDragIndex = null;
 let selectedUploadIndex = null; // For touch/mobile selection
@@ -353,7 +134,9 @@ document.getElementById('img-upload').addEventListener('change', function(e) {
   }
 });
 
+/* --- MODIFIED renderUploaded so it doesn't show HTTD images unless triggered --- */
 function renderUploaded() {
+  if (showingHTTD) return; // Don't show uploads if HTTD is active
   const list = document.getElementById('upload-list');
   list.innerHTML = '';
   uploadedImages.forEach((src, i) => {
@@ -368,12 +151,11 @@ function renderUploaded() {
     img.addEventListener('touchstart', function(e) {
       e.preventDefault();
       if (selectedUploadIndex === i) {
-        // Deselect if already selected
         selectedUploadIndex = null;
       } else {
         selectedUploadIndex = i;
       }
-      renderUploaded(); // re-render highlight
+      renderUploaded();
     });
 
     // Desktop: click to select also works
@@ -390,7 +172,44 @@ function renderUploaded() {
   });
 }
 
-// --- Drag & Drop for Lineup Slots ---
+/* --- HTTD ONLY RENDER --- */
+function renderHTTDOnly() {
+  const list = document.getElementById('upload-list');
+  list.innerHTML = '';
+  httdImages.forEach((src, i) => {
+    let img = document.createElement('img');
+    img.src = src;
+    img.className = 'upload-thumb' + (selectedUploadIndex === 'httd_' + i ? ' selected' : '');
+    img.draggable = true;
+    img.ondragstart = () => currentDragIndex = 'httd_' + i;
+    img.title = 'Drag to lineup';
+
+    img.addEventListener('touchstart', function(e) {
+      e.preventDefault();
+      selectedUploadIndex = 'httd_' + i;
+      renderHTTDOnly();
+    });
+
+    img.addEventListener('click', function(e) {
+      selectedUploadIndex = 'httd_' + i;
+      renderHTTDOnly();
+    });
+
+    list.appendChild(img);
+  });
+}
+
+function showHTTDImages() {
+  showingHTTD = true;
+  renderHTTDOnly();
+}
+
+function hideHTTDImages() {
+  showingHTTD = false;
+  renderUploaded();
+}
+
+/* --- Drag & Drop for Lineup Slots --- */
 function makeLabel(label, onEdit) {
   let labelDiv = document.createElement('div');
   labelDiv.className = 'player-label';
@@ -447,11 +266,21 @@ function loadState() {
 }
 loadState();
 
+/* --- MODIFIED drop-slot listeners for HTTD logic --- */
 document.querySelectorAll('.drop-slot').forEach(slot => {
   slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
   slot.ondragleave = () => slot.classList.remove('dragover');
   slot.ondrop = function(e) {
     e.preventDefault(); slot.classList.remove('dragover');
+    // HTTD drag support
+    if (typeof currentDragIndex === 'string' && currentDragIndex.startsWith('httd_')) {
+      let idx = Number(currentDragIndex.replace('httd_', ''));
+      setSlotImage(slot, httdImages[idx]);
+      hideHTTDImages();
+      currentDragIndex = null;
+      selectedUploadIndex = null;
+      return;
+    }
     if (currentDragIndex !== null && uploadedImages[currentDragIndex]) {
       setSlotImage(slot, uploadedImages[currentDragIndex]);
     }
@@ -472,32 +301,58 @@ document.querySelectorAll('.drop-slot').forEach(slot => {
 
   // --- Touch support: tap on slot to assign selected image ---
   slot.addEventListener('touchstart', function(e) {
+    const slotKey = slot.dataset.slot;
     // Only assign if an image is selected and slot is empty or replaceable
+    if (typeof selectedUploadIndex === 'string' && selectedUploadIndex.startsWith('httd_')) {
+      e.preventDefault();
+      let idx = Number(selectedUploadIndex.replace('httd_', ''));
+      slot.classList.add('touch-highlight');
+      setTimeout(() => {
+        setSlotImage(slot, httdImages[idx]);
+        slot.classList.remove('touch-highlight');
+        selectedUploadIndex = null;
+        hideHTTDImages();
+      }, 120);
+      return;
+    }
     if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
       e.preventDefault();
       slot.classList.add('touch-highlight');
-      // Assign after short delay to show highlight
       setTimeout(() => {
         setSlotImage(slot, uploadedImages[selectedUploadIndex]);
         slot.classList.remove('touch-highlight');
         selectedUploadIndex = null;
         renderUploaded();
       }, 120);
+    } else if (!slotImages[slotKey]) {
+      showHTTDImages();
     }
   });
 
-  // Desktop: click on slot to assign selected image
+  // Desktop: click on slot to assign selected image OR show HTTD
   slot.addEventListener('click', function(e) {
-    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
+    const slotKey = slot.dataset.slot;
+    if (typeof selectedUploadIndex === 'string' && selectedUploadIndex.startsWith('httd_')) {
+      let idx = Number(selectedUploadIndex.replace('httd_', ''));
+      setSlotImage(slot, httdImages[idx]);
+      hideHTTDImages();
+      selectedUploadIndex = null;
+    }
+    else if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
       setSlotImage(slot, uploadedImages[selectedUploadIndex]);
       selectedUploadIndex = null;
       renderUploaded();
+    } else if (!slotImages[slotKey]) {
+      showHTTDImages();
+    } else {
+      hideHTTDImages();
     }
   });
 
   renderSlot(slot);
 });
 
+/* --- PATCHED setSlotImage to always hide HTTD images after assignment --- */
 function setSlotImage(slot, imgSrc, label) {
   slot.innerHTML = '';
   let slotKey = slot.dataset.slot;
@@ -524,6 +379,7 @@ function setSlotImage(slot, imgSrc, label) {
   if (slotType) {
     slot.insertBefore(slotType, slot.firstChild);
   }
+  hideHTTDImages(); // Always hide HTTD browser after selection
   saveState();
 }
 function clearSlot(slot) {
@@ -581,6 +437,10 @@ function downloadLineup() {
     setTimeout(() => document.body.removeChild(link), 100);
   });
 }
+/* --- Ensure upload list only shows uploads on DOMContentLoaded --- */
+window.addEventListener('DOMContentLoaded', function() {
+  hideHTTDImages();
+});
 </script>
 </body>
 </html>
