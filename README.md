@@ -42,8 +42,8 @@ Visit our [Support tab](https://debuddi.github.io/support.html), or reach out vi
 ## 🚀 Quick Start
 
 ```bash
-If you want to promote anything, contact me on Discord.
-Just don't promote betting or bad things.
+If you want to promote anything, just don't promote betting or bad things.
+Contact me on Discord.
 ```
 
 ---
