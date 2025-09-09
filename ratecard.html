@@ -5,7 +5,7 @@
   <title>DeBuDDi - Influencer Rate Card</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
     body {
       margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
@@ -64,14 +64,6 @@
       letter-spacing: 0.02em;
       margin-bottom: 0;
     }
-    .surname {
-      font-family: 'Great Vibes', cursive;
-      font-size: 2.8em;
-      line-height: 1;
-      color: #5c3a23;
-      margin: 0 0 10px 0;
-      letter-spacing: 0.04em;
-    }
     .title {
       font-family: 'Montserrat', Arial, sans-serif;
       font-weight: 700;
@@ -85,13 +77,17 @@
       margin-bottom: 25px;
       max-width: 90%;
     }
-    .section-title {
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-weight: 900;
-      font-size: 1.5em;
-      margin: 35px 0 15px 0;
-      letter-spacing: 0.02em;
-      color: #5c3a23;
+    /* Unified section title styling */
+    .section-title,
+    .gallery-section-title,
+    h2 {
+      font-family: 'Montserrat', Arial, sans-serif !important;
+      font-weight: 900 !important;
+      font-size: 1.5em !important;
+      margin: 35px 0 15px 0 !important;
+      letter-spacing: 0.02em !important;
+      color: #5c3a23 !important;
+      line-height: 1.2;
     }
     .rates-table {
       width: 100%;
@@ -133,9 +129,9 @@
       text-align: left;
     }
     .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 90px);
-      gap: 13px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
       margin-bottom: 25px;
     }
     .gallery img {
@@ -185,13 +181,11 @@
         <tr><td>Intro Video</td><td>50 ribu untuk 3 video</td></tr>
         <tr><td>Full Combo (intro video, logo, livestream promo jasa)</td><td>500 ribu untuk 10 video</td></tr>
      </table>
-<section>
-  <h2>Contoh Video</h2>
-  <div class="gallery" style="display: flex; flex-wrap: wrap; gap: 16px;">
-    <iframe width="400" height="150" src="https://www.youtube.com/embed/-y4Yl0UghH4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <iframe width="400" height="150" src="https://www.youtube.com/embed/TrvDKumlgg0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-</section>
+      <div class="gallery-section-title">Contoh Video</div>
+      <div class="gallery">
+        <iframe width="400" height="150" src="https://www.youtube.com/embed/-y4Yl0UghH4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="400" height="150" src="https://www.youtube.com/embed/TrvDKumlgg0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
       <div class="section-title">DEMOGRAPHICS AUDIENS</div>
       <div class="demographics">
         <strong>AGE RANGE</strong>
@@ -204,13 +198,13 @@
       <div class="section-title">CONTACT ME</div>
       <div class="contact">
        <div>
-  <span class="icon">&#128222;</span>
-  Discord: <a href="https://linktr.ee/debuddihxh" target="_blank" rel="noopener">https://linktr.ee/debuddihxh</a>
-</div>
-<div>
-  <span class="icon">&#9993;</span>
-  <a href="mailto:gwbid224@gmail.com">gwbid224@gmail.com</a>
-</div>
+        <span class="icon">&#128222;</span>
+        Discord: <a href="https://linktr.ee/debuddihxh" target="_blank" rel="noopener">https://linktr.ee/debuddihxh</a>
+      </div>
+      <div>
+        <span class="icon">&#9993;</span>
+        <a href="mailto:gwbid224@gmail.com">gwbid224@gmail.com</a>
+      </div>
       </div>
     </div>
   </div>
