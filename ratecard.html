@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Juliana Silva - Influencer Rate Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Great+Vibes&display=swap');
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #fff;
+      color: #5c3a23;
+      letter-spacing: 0.01em;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      box-shadow: 0 0 20px rgba(90, 60, 35, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .left, .right {
+      flex: 1 1 350px;
+      padding: 40px 30px;
+      box-sizing: border-box;
+    }
+    .left {
+      background: #e5d6c6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+    }
+    .left img.profile {
+      width: 80%;
+      max-width: 320px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      object-fit: cover;
+    }
+    .followers {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+    .followers span {
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+    .right {
+      background: #fff;
+      position: relative;
+    }
+    .name {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 2.7em;
+      letter-spacing: 0.02em;
+      margin-bottom: 0;
+    }
+    .surname {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8em;
+      line-height: 1;
+      color: #5c3a23;
+      margin: 0 0 10px 0;
+      letter-spacing: 0.04em;
+    }
+    .title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 700;
+      font-size: 1.3em;
+      margin-bottom: 20px;
+      letter-spacing: 0.01em;
+    }
+    .desc {
+      font-size: 1em;
+      color: #7a5a3a;
+      margin-bottom: 25px;
+      max-width: 90%;
+    }
+    .section-title {
+      font-family: 'Montserrat', Arial, sans-serif;
+      font-weight: 900;
+      font-size: 1.5em;
+      margin: 35px 0 15px 0;
+      letter-spacing: 0.02em;
+      color: #5c3a23;
+    }
+    .rates-table {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 25px;
+    }
+    .rates-table tr td {
+      padding: 7px 0;
+      font-size: 1.07em;
+    }
+    .rates-table tr td:first-child {
+      font-weight: 600;
+      color: #5c3a23;
+    }
+    .rates-table tr td:last-child {
+      text-align: right;
+      font-weight: 500;
+      color: #7a5a3a;
+    }
+    .demographics, .contact, .stats {
+      margin-bottom: 25px;
+      font-size: 1.07em;
+    }
+    .demographics strong, .contact strong {
+      font-weight: 700;
+      display: block;
+    }
+    .demographics span, .stats span {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .stats {
+      display: flex;
+      gap: 40px;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+    .stats .stat-block {
+      text-align: left;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 90px);
+      gap: 13px;
+      margin-bottom: 25px;
+    }
+    .gallery img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #eee;
+    }
+    .contact {
+      font-size: 1.07em;
+    }
+    .contact .icon {
+      margin-right: 8px;
+      color: #5c3a23;
+    }
+    @media (max-width: 800px) {
+      .container {
+        flex-direction: column;
+      }
+      .left, .right {
+        padding: 25px 10px;
+      }
+      .gallery {
+        grid-template-columns: repeat(2, 80px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <img src="profile1.jpg" alt="Juliana Silva profile" class="profile">
+      <div class="followers">
+        <div>TOTAL FOLLOWERS</div>
+        <span>5M</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="name">JULIANA</div>
+      <div class="surname">Silva</div>
+      <div class="title">DESIGNER</div>
+      <div class="desc">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br>
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </div>
+      <div class="section-title">RATES</div>
+      <table class="rates-table">
+        <tr><td>Social Media Post</td><td>$100</td></tr>
+        <tr><td>Tutorials</td><td>$250</td></tr>
+        <tr><td>Product Placements</td><td>$300</td></tr>
+        <tr><td>Workshops</td><td>$350</td></tr>
+        <tr><td>Try-On Hauls</td><td>$400</td></tr>
+        <tr><td>Swatches and Blog</td><td>$420</td></tr>
+      </table>
+      <div class="gallery">
+        <img src="gallery1.jpg" alt="Gallery image 1">
+        <img src="gallery2.jpg" alt="Gallery image 2">
+        <img src="gallery3.jpg" alt="Gallery image 3">
+        <img src="gallery4.jpg" alt="Gallery image 4">
+      </div>
+      <div class="section-title">DEMOGRAPHICS AUDIENS</div>
+      <div class="demographics">
+        <strong>AGE RANGE</strong>
+        <span>70% 18-29 YEARS</span>
+        <strong>LOCATION</strong>
+        <span>60% U.S</span>
+        <strong>GENDER</strong>
+        <span>88% FEMALE</span>
+      </div>
+      <div class="stats">
+        <div class="stat-block">
+          <strong>ENGAGEMENT RATE</strong>
+          <span>3.5M</span>
+        </div>
+        <div class="stat-block">
+          <strong>AVERAGE IMPRESSIONS</strong>
+          <span>90%</span>
+        </div>
+      </div>
+      <div class="section-title">CONTACT ME</div>
+      <div class="contact">
+        <div><span class="icon">&#128222;</span>123-456-7890</div>
+        <div><span class="icon">&#127968;</span>123 Anywhere St., Any City</div>
+        <div><span class="icon">&#9993;</span>hello@reallygreatsite.com</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
