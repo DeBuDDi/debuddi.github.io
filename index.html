@@ -171,55 +171,6 @@
     .yt-link span { font-size:1.3em; font-weight:bold; color:#ff0000; }
     .video-embed { position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;margin:1em 0; }
     .video-embed iframe { position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px; }
-    /* --- Audio Controls --- */
-    .audio-controls {
-      position: fixed;
-      bottom: 24px;
-      left: 24px;
-      z-index: 400;
-      background: #fffbe6ee;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px #ffe06699;
-      padding: 10px 18px 10px 14px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .audio-controls button {
-      background: #ffe066;
-      color: #ff69b4;
-      border: none;
-      border-radius: 8px;
-      padding: 7px 16px;
-      font-size: 1em;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-    }
-    .audio-controls button:hover {
-      background: #ffafcc;
-      color: #fff;
-    }
-    .audio-song-title {
-      font-size: 1em;
-      color: #b8860b;
-      font-weight: bold;
-      margin-right: 10px;
-    }
-    @media (max-width: 600px) {
-      .audio-controls {
-        bottom: 5px;
-        left: 5px;
-        padding: 5px 8px 5px 8px;
-      }
-      .audio-controls .audio-song-title {
-        font-size: 0.93em;
-      }
-      .audio-controls button {
-        padding: 5px 10px;
-        font-size: 0.98em;
-      }
-    }
   </style>
 </head>
 <body>
@@ -235,14 +186,20 @@
   </div>
 </div>
 
-  <!-- AUDIO AUTOPLAY + PAUSE/STOP BUTTON -->
-  <div class="audio-controls">
-    <span class="audio-song-title">🎶 Evanescence - Bring Me To Life</span>
-    <button id="pause-audio-btn" onclick="pauseAudio()">Pause</button>
-    <button id="play-audio-btn" onclick="playAudio()" style="display:none;">Play</button>
-    <audio id="bg-audio" src="https://cdn.pixabay.com/audio/2023/06/11/audio_122fa4fb4e.mp3" autoplay loop></audio>
+  <!-- Evanescence - Bring Me To Life YouTube Music Box (visible, autoplay, loop) -->
+  <div style="position:fixed;bottom:20px;left:20px;z-index:999;background:#fffbe6cc;padding:10px 20px 14px 18px;border-radius:16px;box-shadow:0 2px 12px #ffafcc88;">
+    <div style="font-weight:bold;color:#b8860b;font-size:1.08em;margin-bottom:2px;">
+      🎶 Evanescence - Bring Me To Life
+    </div>
+    <iframe
+      width="340" height="80"
+      src="https://www.youtube.com/embed/3YxaaGgTQYM?autoplay=1&loop=1&playlist=3YxaaGgTQYM&controls=1"
+      title="Evanescence - Bring Me To Life"
+      frameborder="0"
+      allow="autoplay"
+      style="border-radius:10px;"
+    ></iframe>
   </div>
-  <!-- Note: Replace src above with a direct mp3 link to Evanescence - Bring Me To Life if you have one and have rights to use it. The current is a sample. -->
 
   <div class="banner">
     <img src="https://media.giphy.com/media/ryh0Zu7Rw2UgDNiXYg/giphy.gif" alt="Welcome Banner" style="height:80px;">
@@ -449,29 +406,6 @@
       evt.currentTarget.className += " active";
     }
     document.getElementById("defaultOpen").click();
-
-    // AUDIO CONTROLS LOGIC
-    const bgAudio = document.getElementById('bg-audio');
-    const pauseBtn = document.getElementById('pause-audio-btn');
-    const playBtn = document.getElementById('play-audio-btn');
-    // Ensure autoplay on load (some browsers require user interaction)
-    window.addEventListener('DOMContentLoaded', function() {
-      bgAudio.volume = 0.67; // moderate volume
-      bgAudio.autoplay = true;
-      bgAudio.loop = true;
-      // Try to play (may be blocked by browser until user interacts)
-      bgAudio.play().catch(()=>{});
-    });
-    function pauseAudio() {
-      bgAudio.pause();
-      pauseBtn.style.display = 'none';
-      playBtn.style.display = '';
-    }
-    function playAudio() {
-      bgAudio.play();
-      playBtn.style.display = 'none';
-      pauseBtn.style.display = '';
-    }
   </script>
 </body>
 </html>
