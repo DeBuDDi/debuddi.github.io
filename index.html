@@ -266,45 +266,190 @@
 
   <!-- Video Tab -->
   <div id="Video" class="tabcontent">
-    <div class="video-container">
+  <style>
+    /* Scoped styles for DeBuDDi video block to avoid breaking other page styles */
+    #dbd-video-block { font-family: inherit; color: inherit; }
+    #dbd-video-block .dbd-container { background: #272727; border-radius: 20px; padding: 2em; box-shadow: 0 2px 12px #0004; max-width: 1000px; margin: 0 auto; }
+    #dbd-video-block h1 { margin-top: 0; color: #ffa500; }
+    #dbd-video-block .yt-link { display: inline-flex; align-items: center; color: #fff; text-decoration: none; font-size: 1.05em; margin: 1em 0; background: #ff0000; padding: 0.45em 0.9em; border-radius: 8px; transition: background 0.2s; }
+    #dbd-video-block .yt-link img { width: 20px; height: 20px; margin-right: 0.6em; }
+
+    /* Player and grid */
+    #dbd-video-block .dbd-player { margin: 1.5em auto; max-width: 720px; width: 100%; border-radius: 12px; overflow: hidden; background: #000; }
+    #dbd-video-block .dbd-player iframe { width: 100%; height: 405px; border: 0; display:block; background:#000; }
+    #dbd-video-block .dbd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+    #dbd-video-block .dbd-thumb { background: #111; border-radius: 12px; overflow: hidden; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; display: flex; flex-direction: column; min-height: 150px; border: 1px solid rgba(255,255,255,0.03); }
+    #dbd-video-block .dbd-thumb:hover { transform: translateY(-6px); box-shadow: 0 12px 24px rgba(0,0,0,.6); }
+    #dbd-video-block .dbd-thumb img { width: 100%; height: 110px; object-fit: cover; display:block; background:#000; }
+    #dbd-video-block .dbd-meta { padding: 0.7rem 0.8rem; display: flex; gap: 0.6rem; align-items: flex-start; justify-content: space-between; color: #cfcfcf; font-size: .92rem; }
+    #dbd-video-block .dbd-title { font-weight: 600; color: #fff; font-size: .95rem; line-height: 1.18; max-height: 2.6rem; overflow: hidden; }
+    #dbd-video-block .dbd-date { font-size: .82rem; color: #bdbdbd; white-space: nowrap; }
+
+    #dbd-video-block .dbd-controls { margin-top: 14px; display:flex; gap:10px; align-items:center; justify-content:center; }
+    #dbd-video-block .dbd-btn { background: transparent; color: #ffa500; border: 2px solid rgba(255,165,0,0.12); padding: .45rem .8rem; border-radius: 10px; cursor: pointer; }
+
+    @media (max-width: 900px) { #dbd-video-block .dbd-grid { grid-template-columns: repeat(2,1fr); } #dbd-video-block .dbd-player iframe { height: 320px; } }
+    @media (max-width: 520px) { #dbd-video-block .dbd-grid { grid-template-columns: 1fr; } #dbd-video-block .dbd-player iframe { height: 220px; } }
+  </style>
+
+  <div id="dbd-video-block">
+    <div class="video-container dbd-container">
       <h1>🎬 DeBuDDi: Your Friendly Buddies!</h1>
       <p>
         Welcome to DeBuDDi's official video!<br>
         Explore our tutorials, gacha, livestreams, and gameplay content.<br>
         <b>Subscribe</b> for the latest updates and join the DBD community!
       </p>
+
       <div style="text-align:center;">
-        <a href="https://www.youtube.com/@DeBuDDi" target="_blank" class="yt-link">
+        <a href="https://www.youtube.com/@DeBuDDi" target="_blank" class="yt-link" rel="noopener">
           <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube Icon">
           <span>Visit @DeBuDDi on YouTube</span>
         </a>
-      <div class="video-embed" id="latest-video">
-  <iframe id="yt-latest-video" src="" title="Latest DeBuDDi Video"
-    frameborder="0" allowfullscreen></iframe>
-</div>
-<script>
-  // Replace with your API Key
-  const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
-  // Channel ID for DeBuDDi (from https://www.youtube.com/@DeBuDDi)
-  const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ';
 
-  // Get latest video ID and set iframe src
-  fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=1&type=video`)
-    .then(response => response.json())
-    .then(data => {
-      const latestVideoId = data.items[0].id.videoId;
-      document.getElementById('yt-latest-video').src = `https://www.youtube.com/embed/${latestVideoId}`;
-    })
-    .catch(error => {
-      document.getElementById('latest-video').innerHTML = 'Error loading latest video.';
-      console.error(error);
-    });
-</script>
+        <!-- Embedded player (first video loads here) -->
+        <div class="dbd-player" id="dbd-player">
+          <iframe id="dbd-player-iframe" src="" title="DeBuDDi Player"
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+
+        <!-- 3x3 grid of latest 9 videos -->
+        <div class="dbd-grid" id="dbd-videos-grid" aria-live="polite" aria-busy="true">
+          <!-- Thumbnails will be injected here -->
+        </div>
+
+        <div class="dbd-controls" style="margin-top:18px;">
+          <button class="dbd-btn" id="dbd-refresh">Refresh</button>
+          <a class="yt-link" id="dbd-channel-link" href="https://www.youtube.com/@DeBuDDi/videos" target="_blank" rel="noopener" style="margin-left:8px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube Icon"> View All Videos
+          </a>
+        </div>
       </div>
-      <hr>
-      <p style="text-align:center;font-size:1.3em;color:#ffa500;">✨ Thanks for watching! ✨</p>
+
+      <hr style="border:none;border-top:2px solid #ffa500;margin:2em 0;">
+
+      <p style="text-align:center;font-size:1.05em;color:#ffa500;">✨ Thanks for watching! ✨</p>
     </div>
   </div>
+
+  <script>
+    (function(){
+      // NOTE: Keep the API key you originally used if you want it to continue working.
+      // Consider replacing it with a server-side proxy or secret for production.
+      const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
+      const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ';
+      const maxResults = 9;
+
+      const grid = document.getElementById('dbd-videos-grid');
+      const iframe = document.getElementById('dbd-player-iframe');
+      const refreshBtn = document.getElementById('dbd-refresh');
+
+      function escapeHtml(str){
+        return String(str || '').replace(/[&<>"']/g, function(m){
+          return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+        });
+      }
+
+      function isoToLocal(dateStr){
+        try {
+          const d = new Date(dateStr);
+          return d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+        } catch(e){
+          return dateStr;
+        }
+      }
+
+      function setPlayerSrc(videoId, autoplay){
+        if(!videoId) return;
+        const auto = autoplay ? '&autoplay=1' : '';
+        iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1${auto}`;
+        // scroll into view on mobile if user clicked
+        if(autoplay) iframe.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+
+      function render(items){
+        grid.innerHTML = '';
+        grid.setAttribute('aria-busy', 'false');
+
+        items.forEach((it, idx) => {
+          const vid = it.id && it.id.videoId ? it.id.videoId : (it.videoId || '');
+          const sn = it.snippet || {};
+          const title = sn.title || 'Untitled';
+          const thumb = (sn.thumbnails && (sn.thumbnails.medium || sn.thumbnails.high || sn.thumbnails.default)) ? (sn.thumbnails.medium?.url || sn.thumbnails.high?.url || sn.thumbnails.default?.url) : '';
+          const date = sn.publishedAt ? isoToLocal(sn.publishedAt) : '';
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'dbd-thumb';
+          btn.title = title;
+          btn.innerHTML = `
+            <div>
+              <img src="${escapeHtml(thumb)}" alt="${escapeHtml(title)} thumbnail">
+            </div>
+            <div class="dbd-meta">
+              <div style="flex:1;min-width:0">
+                <div class="dbd-title">${escapeHtml(title)}</div>
+                <div class="dbd-date">${escapeHtml(date)}</div>
+              </div>
+              <div style="margin-left:8px;color:#cfcfcf;font-size:.86rem">#${idx+1}</div>
+            </div>
+          `;
+          btn.addEventListener('click', function(){
+            setPlayerSrc(vid, true);
+            // improve accessibility - move focus to iframe
+            try { iframe.focus(); } catch(e){}
+          });
+          grid.appendChild(btn);
+        });
+
+        // Set the first video in the player (no autoplay)
+        if(items.length){
+          const firstVid = items[0].id && items[0].id.videoId ? items[0].id.videoId : (items[0].videoId || '');
+          setPlayerSrc(firstVid, false);
+        } else {
+          grid.innerHTML = '<p style="padding:18px;color:#cfcfcf">No videos found.</p>';
+        }
+      }
+
+      async function fetchVideos(){
+        if(!apiKey || apiKey === 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk'){
+          grid.innerHTML = '<p style="padding:18px;color:#cfcfcf">No API key configured. Please set your YouTube Data API key in the script.</p>';
+          return;
+        }
+
+        grid.setAttribute('aria-busy', 'true');
+        grid.innerHTML = '<p style="padding:18px;color:#cfcfcf">Loading latest videos...</p>';
+
+        const url = `https://www.googleapis.com/youtube/v3/search?key=${encodeURIComponent(apiKey)}&channelId=${encodeURIComponent(channelId)}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
+        try {
+          const res = await fetch(url);
+          if(!res.ok){
+            const txt = await res.text();
+            throw new Error(`HTTP ${res.status}: ${txt}`);
+          }
+          const data = await res.json();
+          if(!data.items || !data.items.length){
+            render([]);
+            return;
+          }
+          render(data.items);
+        } catch(err){
+          console.error('Error fetching YouTube data', err);
+          grid.innerHTML = `<p style="padding:18px;color:#f99">Error loading videos: ${escapeHtml(err.message || String(err))}</p>`;
+          grid.setAttribute('aria-busy','false');
+        }
+      }
+
+      refreshBtn.addEventListener('click', fetchVideos);
+
+      // Initial load
+      fetchVideos();
+
+      // Expose a safe function in case other scripts want to refresh the grid:
+      window.DebuDDi_Video_Refresh = fetchVideos;
+    })();
+  </script>
+</div>
 
   <!-- Support Tab -->
   <div id="Support" class="tabcontent">
