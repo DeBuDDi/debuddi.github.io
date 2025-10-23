@@ -1,70 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>DeBuDDi Video Tab</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CZNMeta — Videos</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #191919; color: #fff; margin: 0; }
-    .tabcontent { padding: 32px 10vw; }
-    .video-container { background: #272727; border-radius: 20px; padding: 2em; box-shadow: 0 2px 12px #0004; max-width: 700px; margin: auto; }
-    .video-container h1 { margin-top: 0; color: #ffa500; }
-    .yt-link { display: inline-flex; align-items: center; color: #fff; text-decoration: none; font-size: 1.1em; margin: 1em 0; background: #ff0000; padding: 0.5em 1em; border-radius: 8px; transition: background 0.2s; }
-    .yt-link:hover { background: #cc0000; }
-    .yt-link img { width: 32px; height: 32px; margin-right: 0.5em; }
-    .video-embed { margin: 2em auto 1em auto; max-width: 560px; }
-    .video-embed iframe { width: 100%; min-height: 315px; border-radius: 12px; background: #000; }
-    hr { border: none; border-top: 2px solid #ffa500; margin: 2em 0; }
-    @media (max-width: 700px) {
-      .tabcontent { padding: 20px 2vw; }
-      .video-container { padding: 1em; }
-      .video-embed iframe { min-height: 210px; }
+    :root{--bg:#ffffff;--text:#111;--muted:#666;--accent:#0b5fff}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
+    header{background:#0f1724;color:#fff;padding:18px 20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+    .logo{font-weight:700;font-size:18px}
+    nav{display:flex;gap:14px;align-items:center}
+    nav a{color:#cfe0ff;text-decoration:none;font-size:14px;padding:8px;border-radius:6px}
+    nav a:hover{background:rgba(255,255,255,0.04)}
+    .container{max-width:1100px;margin:28px auto;padding:0 18px}
+    .lead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .lead h1{margin:0;font-size:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+    .card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 0 rgba(16,24,40,0.04);border:1px solid #eee;text-decoration:none;color:inherit;display:block}
+    .thumb{width:100%;height:160px;object-fit:cover;background:#000;display:block}
+    .meta{padding:10px}
+    .meta h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
+    .meta p{margin:0;font-size:13px;color:var(--muted)}
+    .menu-btn{display:none}
+    .empty{padding:28px;border-radius:8px;background:#fff;border:1px solid #eee;color:var(--muted)}
+    @media (prefers-color-scheme:dark){
+      :root{--bg:#0b0f1a;--text:#e6eefc;--muted:#9aa8c9}
+      header{background:#081028}
+      .card{background:#071025;border-color:#0e233f;box-shadow:none}
+      .empty{background:#071025;border-color:#0e233f}
     }
   </style>
 </head>
 <body>
-  <!-- Video Tab -->
-  <div id="Video" class="tabcontent">
-    <div class="video-container">
-      <h1>🎬 DeBuDDi: This page is still under construction!</h1>
-      <p>
-        Welcome to DeBuDDi's official video!<br>
-        Explore our tutorials, gacha, livestreams, and gameplay content.<br>
-        <b>Subscribe</b> for the latest updates and join the DBD community!
-      </p>
-      <div style="text-align:center;">
-        <a href="https://www.youtube.com/@DeBuDDi" target="_blank" class="yt-link">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube Icon">
-          <span>Visit @DeBuDDi on YouTube</span>
-        </a>
-        <div class="video-embed" id="latest-video">
-          <iframe id="yt-latest-video" src="" title="Latest DeBuDDi Video"
-            frameborder="0" allowfullscreen></iframe>
-        </div>
-      </div>
-      <hr>
-      <p style="text-align:center;font-size:1.3em;color:#ffa500;">✨ Thanks for watching! ✨</p>
+  <header>
+    <div class="logo"><a href="/" style="color:inherit;text-decoration:none">DeBuDDi</a></div>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/news.html">News</a>
+      <a href="/video.html" style="background:rgba(255,255,255,0.06);color:#fff">Videos</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div class="lead">
+      <h1>Videos posted on https://www.cznmeta.com/news</h1>
+      <div style="font-size:13px;color:var(--muted)">Updated: <span id="updatedAt">—</span></div>
     </div>
-  </div>
+
+    <div id="content">
+      <div class="empty">Loading videos…</div>
+    </div>
+  </main>
+
   <script>
-    // NOTE: If you deploy this on GitHub Pages, this API Key may hit quota limits or not work due to CORS/browser restrictions.
-    // For production, consider using a serverless function or backend proxy!
+    // This page expects a pre-generated /videos.json (written by the Action/script)
+    // Fallback: link to /docs/video.html if no JSON is available.
+    async function load() {
+      const container = document.getElementById('content');
+      const updatedAt = document.getElementById('updatedAt');
 
-    // Replace with your API Key
-    const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
-    // Channel ID for DeBuDDi
-    const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ';
+      try {
+        const resp = await fetch('/videos.json', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('videos.json not found');
+        const videos = await resp.json();
+        if (!Array.isArray(videos) || videos.length === 0) {
+          container.innerHTML = '<div class="empty">No videos found. Try <a href="/docs/video.html">/docs/video.html</a></div>';
+          return;
+        }
 
-    fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=1&type=video`)
-      .then(response => response.json())
-      .then(data => {
-        const latestVideoId = data.items[0].id.videoId;
-        document.getElementById('yt-latest-video').src = `https://www.youtube.com/embed/${latestVideoId}`;
-      })
-      .catch(error => {
-        document.getElementById('latest-video').innerHTML = 'Error loading latest video.';
-        console.error(error);
-      });
+        updatedAt.textContent = new Date().toLocaleString();
+
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        grid.innerHTML = videos.map(v => {
+          const title = escapeHtml(v.title || v.id || 'Untitled');
+          const author = escapeHtml(v.author || '');
+          const thumb = escapeHtml(v.thumbnail || `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`);
+          const url = escapeHtml(v.url || `https://www.youtube.com/watch?v=${v.id}`);
+          const note = v.sourceTitle ? `<div style="font-size:12px;color:var(--muted);margin-top:6px">${escapeHtml(v.sourceTitle)}</div>` : '';
+          return `<a class="card" href="${url}" target="_blank" rel="noopener noreferrer">
+            <img class="thumb" src="${thumb}" alt="${title}">
+            <div class="meta">
+              <h3>${title}</h3>
+              <p>${author}${note}</p>
+            </div>
+          </a>`;
+        }).join('\\n');
+
+        container.innerHTML = '';
+        container.appendChild(grid);
+      } catch (err) {
+        container.innerHTML = '<div class="empty">Pre-generated videos.json not available. Open <a href="/docs/video.html">/docs/video.html</a> (generated by the Action) or run the generator.</div>';
+        console.warn(err);
+      }
+    }
+
+    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+    load();
   </script>
 </body>
 </html>
