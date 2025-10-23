@@ -3,7 +3,7 @@ name: Build video list
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # daily UTC
+    - cron: '0 0 * * *'
   push:
     branches:
       - main
@@ -15,28 +15,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Set up Node.js
+      - name: Node
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci
-
-      - name: Build generated site
+      - name: Run generator
         run: npm run build
-
-      - name: Commit generated docs
+      - name: Commit generated files
         uses: EndBug/add-and-commit@v9
         with:
           author_name: github-actions
           author_email: github-actions@users.noreply.github.com
-          message: 'chore: update generated docs/index.html'
-          add: 'docs/index.html'
+          message: 'chore: generate videos.json and docs/video.html from cznmeta news'
+          add: 'videos.json,docs/video.html'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
