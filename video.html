@@ -2,103 +2,350 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <title>DeBuDDi — Latest Videos</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CZNMeta — Videos</title>
   <style>
-    :root{--bg:#ffffff;--text:#111;--muted:#666;--accent:#0b5fff}
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;}
-    header{background:#0f1724;color:#fff;padding:18px 20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
-    .logo{font-weight:700;font-size:18px}
-    nav{display:flex;gap:14px;align-items:center}
-    nav a{color:#cfe0ff;text-decoration:none;font-size:14px;padding:8px;border-radius:6px}
-    nav a:hover{background:rgba(255,255,255,0.04)}
-    .container{max-width:1100px;margin:28px auto;padding:0 18px}
-    .lead{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
-    .lead h1{margin:0;font-size:20px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-    .card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 0 rgba(16,24,40,0.04);border:1px solid #eee;text-decoration:none;color:inherit;display:block}
-    .thumb{width:100%;height:160px;object-fit:cover;background:#000;display:block}
-    .meta{padding:10px}
-    .meta h3{margin:0 0 6px 0;font-size:15px;line-height:1.25}
-    .meta p{margin:0;font-size:13px;color:var(--muted)}
-    .menu-btn{display:none}
-    .empty{padding:28px;border-radius:8px;background:#fff;border:1px solid #eee;color:var(--muted)}
-    @media (prefers-color-scheme:dark){
-      :root{--bg:#0b0f1a;--text:#e6eefc;--muted:#9aa8c9}
-      header{background:#081028}
-      .card{background:#071025;border-color:#0e233f;box-shadow:none}
-      .empty{background:#071025;border-color:#0e233f}
+    :root{
+      --bg:#191919;
+      --card:#272727;
+      --accent:#ffa500;
+      --yt:#ff0000;
+      --muted:#cfcfcf;
+    }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{
+      padding:48px 6vw;
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 6px 28px rgba(0,0,0,.6);
+    }
+
+    h1{
+      margin:0 0 8px 0;
+      color:var(--accent);
+      font-size:1.6rem;
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+
+    p.lead{
+      margin:0 0 18px 0;
+      color:var(--muted);
+    }
+
+    .top-row{
+      display:flex;
+      gap:18px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+
+    .yt-link{
+      display:inline-flex;
+      align-items:center;
+      gap:.6rem;
+      text-decoration:none;
+      color:#fff;
+      background:var(--yt);
+      padding:.45rem .9rem;
+      border-radius:10px;
+      font-weight:600;
+      box-shadow:0 4px 10px rgba(0,0,0,.35);
+    }
+    .yt-link img{ width:20px; height:20px; }
+
+    .player{
+      margin:22px auto;
+      max-width:720px;
+      width:100%;
+      border-radius:14px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 8px 30px rgba(0,0,0,.6);
+    }
+    .player iframe{
+      width:100%;
+      height:405px;
+      border:0;
+      display:block;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .thumb{
+      background:#111;
+      border-radius:12px;
+      overflow:hidden;
+      cursor:pointer;
+      transition:transform .14s ease, box-shadow .14s ease;
+      display:flex;
+      flex-direction:column;
+      min-height:170px;
+    }
+    .thumb:hover{
+      transform:translateY(-6px);
+      box-shadow:0 16px 32px rgba(0,0,0,.6);
+    }
+    .thumb img{
+      width:100%;
+      height:110px;
+      object-fit:cover;
+      display:block;
+      background:#000;
+    }
+    .meta{
+      padding:.7rem .8rem;
+      display:flex;
+      gap:.6rem;
+      align-items:flex-start;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    .meta .title{
+      font-weight:600;
+      color:#fff;
+      font-size:.95rem;
+      line-height:1.18;
+      max-height:2.6rem;
+      overflow:hidden;
+    }
+    .meta .date{
+      font-size:.82rem;
+      color:#bdbdbd;
+      white-space:nowrap;
+    }
+
+    .controls{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+    }
+    .btn{
+      background:transparent;
+      color:var(--accent);
+      border:2px solid rgba(255,165,0,.12);
+      padding:.5rem .9rem;
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    hr{
+      border:0;
+      border-top:1px solid rgba(255,165,0,.12);
+      margin:22px 0 0 0;
+    }
+
+    @media (max-width:900px){
+      .grid{ grid-template-columns:repeat(2,1fr); }
+      .player iframe{ height:320px; }
+    }
+    @media (max-width:520px){
+      .grid{ grid-template-columns:1fr; }
+      .player iframe{ height:220px; }
+    }
+
+    /* simple play overlay */
+    .play-overlay{
+      position:relative;
+    }
+    .play-overlay::after{
+      content: '►';
+      position:absolute;
+      left:8px;
+      bottom:8px;
+      background:var(--yt);
+      color:#fff;
+      width:36px;
+      height:36px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:8px;
+      font-weight:700;
+      box-shadow:0 6px 16px rgba(0,0,0,.45);
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo"><a href="/" style="color:inherit;text-decoration:none">DeBuDDi</a></div>
-    <nav aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/news.html">News</a>
-      <a href="/video.html" style="background:rgba(255,255,255,0.06);color:#fff">Videos</a>
-      <a href="/about.html">About</a>
-    </nav>
-  </header>
+  <main class="wrap">
+    <div class="card" id="video-card">
+      <div class="top-row">
+        <div>
+          <h1>🎬 DeBuDDi — Latest Videos</h1>
+          <p class="lead">Below are the 9 most recently published videos on the DeBuDDi channel. Click any thumbnail to play it in the embedded player.</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <a class="yt-link" href="https://www.youtube.com/@DeBuDDi" target="_blank" rel="noopener">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube">
+            <span>@DeBuDDi</span>
+          </a>
+          <button class="btn" id="refresh">Refresh</button>
+        </div>
+      </div>
 
-  <main class="container">
-    <div class="lead">
-      <h1>Videos posted on https://www.cznmeta.com/news</h1>
-      <div style="font-size:13px;color:var(--muted)">Updated: <span id="updatedAt">—</span></div>
-    </div>
+      <div class="player" id="player">
+        <iframe id="player-iframe" src="" title="DeBuDDi Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
 
-    <div id="content">
-      <div class="empty">Loading videos…</div>
+      <div class="grid" id="videos-grid" aria-live="polite" aria-busy="true">
+        <!-- thumbnails inserted here -->
+      </div>
+
+      <div class="controls" style="margin-top:18px;">
+        <a id="open-channel" class="yt-link" href="https://www.youtube.com/@DeBuDDi/videos" target="_blank" rel="noopener">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/YouTube_icon_%282013-2017%29.png" alt="YouTube"> View All Videos
+        </a>
+      </div>
+
+      <hr>
+
+      <p style="text-align:center;color:var(--muted);margin-top:12px;font-size:.95rem;">
+        Note: This uses the YouTube Data API (client-side). If you deploy to GitHub Pages consider moving the API call to a serverless function to protect your API key and avoid quota/CORS issues.
+      </p>
     </div>
   </main>
 
   <script>
-    // This page expects a pre-generated /videos.json (written by the Action/script)
-    // Fallback: link to /docs/video.html if no JSON is available.
-    async function load() {
-      const container = document.getElementById('content');
-      const updatedAt = document.getElementById('updatedAt');
+    // IMPORTANT: Replace the placeholder below with your actual API key.
+    // For security, do not commit a production API key to a public repo.
+    // Example (from your previous code): const defaultApiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
+    const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
+    const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ'; // DeBuDDi channel ID
+    const maxResults = 9;
 
+    const grid = document.getElementById('videos-grid');
+    const iframe = document.getElementById('player-iframe');
+    const refreshBtn = document.getElementById('refresh');
+
+    function isoDateToLocal(dateStr){
       try {
-        const resp = await fetch('/videos.json', { cache: 'no-store' });
-        if (!resp.ok) throw new Error('videos.json not found');
-        const videos = await resp.json();
-        if (!Array.isArray(videos) || videos.length === 0) {
-          container.innerHTML = '<div class="empty">No videos found. Try <a href="/docs/video.html">/docs/video.html</a></div>';
-          return;
-        }
-
-        updatedAt.textContent = new Date().toLocaleString();
-
-        const grid = document.createElement('div');
-        grid.className = 'grid';
-        grid.innerHTML = videos.map(v => {
-          const title = escapeHtml(v.title || v.id || 'Untitled');
-          const author = escapeHtml(v.author || '');
-          const thumb = escapeHtml(v.thumbnail || `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`);
-          const url = escapeHtml(v.url || `https://www.youtube.com/watch?v=${v.id}`);
-          const note = v.sourceTitle ? `<div style="font-size:12px;color:var(--muted);margin-top:6px">${escapeHtml(v.sourceTitle)}</div>` : '';
-          return `<a class="card" href="${url}" target="_blank" rel="noopener noreferrer">
-            <img class="thumb" src="${thumb}" alt="${title}">
-            <div class="meta">
-              <h3>${title}</h3>
-              <p>${author}${note}</p>
-            </div>
-          </a>`;
-        }).join('\\n');
-
-        container.innerHTML = '';
-        container.appendChild(grid);
-      } catch (err) {
-        container.innerHTML = '<div class="empty">Pre-generated videos.json not available. Open <a href="/docs/video.html">/docs/video.html</a> (generated by the Action) or run the generator.</div>';
-        console.warn(err);
+        const d = new Date(dateStr);
+        return d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
+      } catch(e){
+        return dateStr;
       }
     }
 
-    function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function setPlayer(videoId){
+      if(!videoId) return;
+      // Use autoplay=1 when user explicitly clicks a thumbnail. For initial load we set autoplay=0.
+      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+      // Make sure the player is visible and move to it on small screens.
+      iframe.scrollIntoView({behavior:'smooth', block:'center'});
+    }
 
-    load();
+    function renderThumbnails(items){
+      grid.innerHTML = '';
+      grid.setAttribute('aria-busy', 'false');
+
+      items.forEach((it, idx) => {
+        const vid = it.id && it.id.videoId ? it.id.videoId : (it.videoId || '');
+        const sn = it.snippet || {};
+        const title = sn.title || 'Untitled';
+        const thumb = (sn.thumbnails && (sn.thumbnails.medium || sn.thumbnails.high || sn.thumbnails.default)) ? (sn.thumbnails.medium?.url || sn.thumbnails.high?.url || sn.thumbnails.default?.url) : '';
+        const date = sn.publishedAt ? isoDateToLocal(sn.publishedAt) : '';
+
+        const item = document.createElement('button');
+        item.className = 'thumb';
+        item.type = 'button';
+        item.title = title;
+        item.innerHTML = `
+          <div class="play-overlay">
+            <img src="${thumb}" alt="${escapeHtml(title)} thumbnail">
+          </div>
+          <div class="meta">
+            <div style="flex:1;min-width:0">
+              <div class="title">${escapeHtml(title)}</div>
+              <div style="color:#bdbdbd;font-size:.82rem;margin-top:.35rem">${escapeHtml(date)}</div>
+            </div>
+            <div style="margin-left:8px;color:var(--muted);font-size:.82rem">#${idx+1}</div>
+          </div>
+        `;
+        // clicking sets player to that video and appends autoplay
+        item.addEventListener('click', () => {
+          iframe.src = `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&autoplay=1`;
+          // update focus for screen readers
+          iframe.focus();
+        });
+        grid.appendChild(item);
+      });
+
+      // set first video as default player if present
+      if(items.length){
+        const firstVid = items[0].id && items[0].id.videoId ? items[0].id.videoId : (items[0].videoId || '');
+        // set player without autoplay initially
+        iframe.src = `https://www.youtube.com/embed/${firstVid}?rel=0&modestbranding=1`;
+      } else {
+        grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No videos found.</p>';
+      }
+    }
+
+    function escapeHtml(str){
+      return String(str || '').replace(/[&<>"']/g, function(m){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+      });
+    }
+
+    async function fetchLatestVideos(){
+      if(!apiKey || apiKey === 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk'){
+        grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No API key configured. Please replace the placeholder API key in the script to fetch videos from YouTube.</p>';
+        document.getElementById('video-card').scrollIntoView();
+        return;
+      }
+
+      grid.setAttribute('aria-busy', 'true');
+      grid.innerHTML = '<p style="padding:18px;color:var(--muted)">Loading latest videos...</p>';
+
+      const url = `https://www.googleapis.com/youtube/v3/search?key=${encodeURIComponent(apiKey)}&channelId=${encodeURIComponent(channelId)}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
+      try {
+        const res = await fetch(url);
+        if(!res.ok){
+          const text = await res.text();
+          throw new Error(`HTTP ${res.status}: ${text}`);
+        }
+        const data = await res.json();
+        if(!data.items || !data.items.length){
+          renderThumbnails([]);
+          return;
+        }
+        renderThumbnails(data.items);
+      } catch(err){
+        console.error('Error fetching YouTube data', err);
+        grid.innerHTML = `<p style="padding:18px;color:#f99">Error loading videos: ${escapeHtml(err.message || String(err))}</p>`;
+        grid.setAttribute('aria-busy','false');
+      }
+    }
+
+    // refresh button
+    refreshBtn.addEventListener('click', fetchLatestVideos);
+
+    // initial load
+    fetchLatestVideos();
+
   </script>
 </body>
 </html>
