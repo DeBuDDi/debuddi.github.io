@@ -7,19 +7,16 @@ const sourceUrl = 'https://www.cznmeta.com/news';
 
 async function main() {
   console.log('Fetching', sourceUrl);
-  const res = await fetch(sourceUrl, {
-    headers: { 'User-Agent': 'cznmeta-video-generator/1.0 (+https://github.com)' },
-    timeout: 20000
-  });
+  const res = await fetch(sourceUrl, { headers: { 'User-Agent': 'cznmeta-video-generator/1.0 (+https://github.com/DeBuDDi)' } });
   if (!res.ok) throw new Error(`Failed to fetch ${sourceUrl}: ${res.status}`);
   const html = await res.text();
   const $ = cheerio.load(html);
 
   const ids = new Set();
 
-  // find links and iframes that include YouTube URLs
+  // Find YouTube links in anchors and iframes
   $('a[href], iframe[src]').each((i, el) => {
-    const href = $(el).attr('href') || $(el).attr('src') || '';
+    const href = ($(el).attr('href') || $(el).attr('src') || '').trim();
     if (!href) return;
     const m = href.match(/(?:youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtu\.be\/)([A-Za-z0-9_-]{11})/);
     if (m) ids.add(m[1]);
@@ -32,22 +29,16 @@ async function main() {
     try {
       const url = `https://www.youtube.com/watch?v=${id}`;
       const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
-      const o = await fetch(oembedUrl, { headers: { 'User-Agent': 'cznmeta-video-generator/1.0' }, timeout: 15000 });
+      const o = await fetch(oembedUrl, { headers: { 'User-Agent': 'cznmeta-video-generator/1.0' } });
       if (!o.ok) {
         console.warn('oEmbed failed for', id, o.status);
         videos.push({ id, url, title: `Video ${id}`, author: '', thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg` });
         continue;
       }
       const data = await o.json();
-      videos.push({
-        id,
-        title: data.title,
-        author: data.author_name,
-        thumbnail: data.thumbnail_url,
-        url
-      });
+      videos.push({ id, title: data.title, author: data.author_name, thumbnail: data.thumbnail_url, url });
     } catch (e) {
-      console.warn('Error fetching oEmbed for', id, e.message || e);
+      console.warn('Error fetching oEmbed for', id, e && e.message ? e.message : e);
       videos.push({ id, url: `https://www.youtube.com/watch?v=${id}`, title: `Video ${id}`, author: '', thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg` });
     }
   }
