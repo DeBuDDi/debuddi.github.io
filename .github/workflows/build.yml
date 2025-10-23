@@ -1,6 +1,5 @@
 name: Build video list
 
-# Run on demand and daily
 on:
   workflow_dispatch:
   schedule:
