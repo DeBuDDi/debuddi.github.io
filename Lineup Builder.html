@@ -25,8 +25,8 @@
     .menu-bar{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
     .btn{background:var(--accent);color:#fff;border:0;padding:8px 18px;border-radius:10px;cursor:pointer;box-shadow:0 2px 10px rgba(25,118,210,0.12);font-weight:700}
     .btn.secondary{background:#9aaec6;color:#fff}
-    #upload-list{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0;min-height:50px}
-    .upload-thumb{width:60px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--accent);box-shadow:0 2px 8px rgba(25,118,210,0.08);cursor:grab}
+    #upload-list{display:flex;gap:8px;flex-wrap:nowrap;align-items:center;margin:12px 0;min-height:50px;overflow:auto;padding-bottom:6px}
+    .upload-thumb{width:60px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--accent);box-shadow:0 2px 8px rgba(25,118,210,0.08);cursor:grab;flex:0 0 auto}
     .upload-thumb.selected{outline:4px solid rgba(249,166,2,0.26)}
     /* Board */
     .board{
@@ -38,7 +38,7 @@
     .left-area{display:flex;flex-direction:column;gap:10px}
     .coach-wrap{background:rgba(255,255,255,0.9);border-radius:12px;padding:8px;border:1px solid rgba(0,0,0,0.03);display:flex;flex-direction:column;align-items:center;min-height:190px;justify-content:flex-start;position:relative}
     .coach-title{font-weight:700;color:#2a6b9a;margin-bottom:6px}
-    .coach-slot{width:140px;height:160px;display:flex;align-items:center;justify-content:center}
+    .coach-slot{width:140px;height:160px;display:flex;flex-direction:column;align-items:center;justify-content:center}
     /* right area: court and bench */
     .right-area{display:flex;flex-direction:column;gap:12px}
     .court{background:linear-gradient(180deg,#e9faff, #ffffff);border-radius:12px;padding:10px;border:1px solid rgba(12,60,110,0.04);min-height:320px;position:relative;overflow:visible}
@@ -53,7 +53,7 @@
     .bench-area{background:transparent;padding:6px;border-radius:10px;display:flex;flex-direction:column;gap:8px}
     .bench-head{display:flex;justify-content:space-between;align-items:center;padding:0 6px}
     .bench-strip{display:flex;gap:8px;overflow:auto;padding:8px 6px;min-height:110px}
-    .bench-slot{width:98px;height:120px;background:linear-gradient(180deg,#fff,#fffefc);border-radius:10px;border:2px dotted rgba(100,100,100,0.2);display:flex;flex-direction:column;align-items:center;padding:6px}
+    .bench-slot{width:98px;height:120px;background:linear-gradient(180deg,#fff,#fffefc);border-radius:10px;border:2px dotted rgba(100,100,100,0.2);display:flex;flex-direction:column;align-items:center;padding:6px;flex:0 0 auto}
     .bench-slot .char-img{width:86px;height:92px;margin-top:8px}
     .bench-label{background:#888;color:#fff;padding:3px 8px;border-radius:8px;font-weight:700;position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:0.78rem}
     /* small helper styles */
@@ -92,7 +92,7 @@
     <h1>Haikyuu Volleyball Lineup Builder</h1>
 
     <div class="top-row">
-      <div class="left-pill">Haikyu!! touch the dream</div>
+      <div class="left-pill">Akapanda</div>
       <div class="menu-bar">
         <input type="file" id="img-upload" accept="image/*" multiple style="display:none">
         <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
@@ -101,7 +101,7 @@
       </div>
     </div>
 
-    <div id="upload-list"></div>
+    <div id="upload-list" aria-label="Uploaded characters"></div>
 
     <div class="board" id="lineup-board">
       <div class="board-inner">
@@ -110,15 +110,14 @@
           <div class="coach-wrap">
             <div class="coach-title">Coach</div>
             <div class="coach-slot drop-slot coach-slot" data-type="coach" data-slot="coach" style="width:140px;height:160px;">
-              <!-- slot-type-label from original kept for JS compatibility but visually hidden (we use new .coach-title) -->
               <span class="slot-type-label coach-label" style="display:none">COACH</span>
             </div>
-            <div style="margin-top:10px;font-size:0.92rem;color:#486f93;text-align:center"></div>
+            <!-- Coach editable label is rendered underneath the coach-slot by JS -->
           </div>
 
           <!-- a small area for instructions or spare -->
           <div style="background:rgba(255,255,255,0.8);border-radius:12px;padding:10px;border:1px solid rgba(10,60,110,0.04);min-height:80px;display:flex;align-items:center;justify-content:center">
-            <div style="text-align:center;color:#2b6b94;font-size:0.95rem">Have Fun</div>
+            <div style="text-align:center;color:#2b6b94;font-size:0.95rem">Substitute Player</div>
           </div>
         </div>
 
@@ -205,16 +204,25 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
-  // === Kept core logic and behavior from your original script, only small integration tweaks to fit new layout ===
+  // === Kept core logic and behavior from your original script, only fixes applied ===
   let uploadedImages = [];
   let currentDragIndex = null;
   let selectedUploadIndex = null;
-  // labels and images for slots
+  // labels and images for slots; coach default label moved into initial labels
   function getInitialLabels(){
-    return {'0':'','1':'','2':'','3':'','4':'','5':'','coach':'','sub0':'','sub1':'','sub2':'','sub3':'','sub4':'','sub5':''};
+    return {
+      '0':'','1':'','2':'','3':'','4':'','5':'',
+      'coach':'Nekomata Yasufumi',
+      'sub0':'','sub1':'','sub2':'','sub3':'','sub4':'','sub5':''
+    };
   }
   let slotLabels = getInitialLabels();
   let slotImages = {};
+
+  // Utility: compact uploads (remove falsy entries)
+  function compactUploads(){
+    uploadedImages = uploadedImages.filter(Boolean);
+  }
 
   // Upload handling
   document.getElementById('img-upload').addEventListener('change', function(e){
@@ -222,6 +230,7 @@
       let reader = new FileReader();
       reader.onload = function(evt){
         uploadedImages.push(evt.target.result);
+        compactUploads();
         renderUploaded();
         saveState();
       };
@@ -232,9 +241,11 @@
   });
 
   function renderUploaded(){
+    compactUploads();
     const list = document.getElementById('upload-list');
     list.innerHTML = '';
     uploadedImages.forEach((src,i)=>{
+      if (!src) return; // skip falsy
       let img = document.createElement('img');
       img.src = src;
       img.className = 'upload-thumb' + (selectedUploadIndex === i ? ' selected' : '');
@@ -259,9 +270,10 @@
     });
   }
 
-  // Save/load to localStorage
+  // Save/load to localStorage (uploads compacted on save)
   function saveState(){
     try {
+      compactUploads();
       const state = {slotLabels, slotImages, uploadedImages};
       localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
     } catch(e){}
@@ -274,6 +286,7 @@
       slotLabels = parsed.slotLabels || getInitialLabels();
       slotImages = parsed.slotImages || {};
       uploadedImages = parsed.uploadedImages || [];
+      compactUploads();
       renderUploaded();
       document.querySelectorAll('.drop-slot').forEach(s => renderSlot(s));
       if (Object.keys(slotImages).length) document.getElementById('download-bar').style.display = 'flex';
@@ -311,13 +324,19 @@
   function renderSlot(slot){
     const key = slot.dataset.slot;
     slot.innerHTML = '';
-    // keep custom small hidden labels (slot-type-label) removed to avoid duplicates
+    // if slot has image use the usual renderer
     if (slotImages && slotImages[key]){
       setSlotImage(slot, slotImages[key], slotLabels[key]);
     } else {
-      // leave empty styled container (slot-card/bench-slot/coach-slot already provide visuals)
-      // but ensure the slot-type-label (old dom) remains for backwards compatibility
-      // (we intentionally do not re-add the original slot-type-label copy)
+      // For coach slot, show the editable label at the bottom even without an image
+      if (key === 'coach') {
+        let labelDiv = makeLabel(slotLabels[key] || "Click to Edit", val => {
+          slotLabels[key] = val;
+          saveState();
+        });
+        slot.appendChild(labelDiv);
+      }
+      // otherwise leave empty (visual comes from CSS / markup)
     }
   }
 
@@ -330,7 +349,6 @@
     // create image element
     let img = document.createElement('img');
     img.src = imgSrc;
-    // different sizing handled by CSS for main vs bench via nested selectors (.bench-slot .char-img)
     img.className = 'char-img';
     img.draggable = true;
     img.ondragstart = function(e){
@@ -361,7 +379,7 @@
   function clearSlot(slot){
     const slotKey = slot.dataset.slot;
     slot.innerHTML = '';
-    slotImages[slotKey] = null;
+    delete slotImages[slotKey];
     slotLabels[slotKey] = '';
     saveState();
   }
@@ -370,20 +388,43 @@
   document.querySelectorAll('.drop-slot').forEach(slot => {
     slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
     slot.ondragleave = () => slot.classList.remove('dragover');
+
     slot.ondrop = function(e){
       e.preventDefault();
       slot.classList.remove('dragover');
+
+      compactUploads();
+
+      // If dragging from the upload list (single-use)
       if (currentDragIndex !== null && uploadedImages[currentDragIndex]){
+        const destKey = slot.dataset.slot;
+        // if destination had an image, return it to uploads
+        if (slotImages[destKey]) {
+          uploadedImages.push(slotImages[destKey]);
+        }
         setSlotImage(slot, uploadedImages[currentDragIndex]);
-      } else if (window._draggingSlot && window._draggingSlot !== slot){
-        // drag between slots
-        setSlotImage(slot, slotImages[window._draggingSlot.dataset.slot], slotLabels[window._draggingSlot.dataset.slot]);
-        clearSlot(window._draggingSlot);
+        uploadedImages.splice(currentDragIndex, 1);
+        compactUploads();
       }
+      // If dragging between slots -> swap contents
+      else if (window._draggingSlot && window._draggingSlot !== slot){
+        const srcKey = window._draggingSlot.dataset.slot;
+        const dstKey = slot.dataset.slot;
+
+        const srcImg = slotImages[srcKey] || null;
+        const srcLbl = slotLabels[srcKey] || '';
+        const dstImg = slotImages[dstKey] || null;
+        const dstLbl = slotLabels[dstKey] || '';
+
+        if (srcImg) setSlotImage(slot, srcImg, srcLbl); else clearSlot(slot);
+        if (dstImg) setSlotImage(window._draggingSlot, dstImg, dstLbl); else clearSlot(window._draggingSlot);
+      }
+
       currentDragIndex = null;
       window._draggingSlot = null;
       selectedUploadIndex = null;
       renderUploaded();
+      saveState();
     };
 
     // for desktop dragging of an existing slot image
@@ -393,26 +434,34 @@
       }
     });
 
-    // touch: tap to assign selected upload image
+    // touch: tap to assign selected upload image (single-use)
     slot.addEventListener('touchstart', function(e){
       if (selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]){
         e.preventDefault();
         slot.classList.add('touch-highlight');
         setTimeout(() => {
+          const destKey = slot.dataset.slot;
+          if (slotImages[destKey]) uploadedImages.push(slotImages[destKey]);
           setSlotImage(slot, uploadedImages[selectedUploadIndex]);
-          slot.classList.remove('touch-highlight');
+          uploadedImages.splice(selectedUploadIndex, 1);
           selectedUploadIndex = null;
+          slot.classList.remove('touch-highlight');
           renderUploaded();
+          saveState();
         }, 120);
       }
     });
 
-    // click to assign selected upload image
+    // click to assign selected upload image (single-use)
     slot.addEventListener('click', function(e){
       if (selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]){
+        const destKey = slot.dataset.slot;
+        if (slotImages[destKey]) uploadedImages.push(slotImages[destKey]);
         setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+        uploadedImages.splice(selectedUploadIndex, 1);
         selectedUploadIndex = null;
         renderUploaded();
+        saveState();
       }
     });
 
