@@ -1,585 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <title>Haikyuu Volleyball Lineup Builder</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: radial-gradient(circle at 60% 20%, #ffe066 0%, #ffd700 60%, #ffc300 100%);
-      background-image:
-        url('data:image/svg+xml;utf8,<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="58" stroke="orange" stroke-width="3"/><path d="M2,60 Q60,10 118,60" stroke="white" stroke-width="3" fill="none"/><path d="M2,60 Q60,110 118,60" stroke="white" stroke-width="3" fill="none"/><path d="M60,2 Q110,60 60,118" stroke="white" stroke-width="3" fill="none"/><path d="M60,2 Q10,60 60,118" stroke="white" stroke-width="3" fill="none"/></svg>');
-      background-repeat: repeat;
-      min-height: 100vh;
-      margin: 0;
+    :root{
+      --accent:#1976d2;
+      --gold:#f9a602;
+      --soft-blue:#eaf6ff;
+      --panel:#eef7ff;
     }
-    .container {
-      max-width: 980px;
-      margin: 30px auto;
-      background: #f7fbff;
-      border-radius: 20px;
-      box-shadow: 0 4px 32px #aac4e3;
-      padding: 20px 30px 40px 30px;
-      position: relative;
+    html,body{height:100%;margin:0;font-family:'Montserrat',Arial,sans-serif;background:linear-gradient(180deg,#e6f3ff 0%, #f6fbff 100%);}
+    .wrap{max-width:980px;margin:22px auto;padding:18px;border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,255,255,0.95));box-shadow:0 6px 30px rgba(5,50,90,0.08);}
+    h1{margin:0 0 10px;font-size:1.9rem;color:#0b66a3;text-align:center;letter-spacing:1px}
+    .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}
+    .left-pill{
+      background:rgba(255,255,255,0.9);
+      border:1px solid rgba(10,60,110,0.06);
+      padding:8px 14px;border-radius:18px;font-weight:700;color:#2a6b9a;
+      box-shadow:0 1px 6px rgba(14,70,120,0.05);
     }
-    h1 {
-      text-align: center;
-      font-size: 2.2em;
-      color: #e76f51;
-      letter-spacing: 2px;
-      margin-bottom: 12px;
-      text-shadow: 0 2px 10px #ffd70099;
+    .menu-bar{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+    .btn{background:var(--accent);color:#fff;border:0;padding:8px 18px;border-radius:10px;cursor:pointer;box-shadow:0 2px 10px rgba(25,118,210,0.12);font-weight:700}
+    .btn.secondary{background:#9aaec6;color:#fff}
+    #upload-list{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:12px 0;min-height:50px}
+    .upload-thumb{width:60px;height:80px;object-fit:cover;border-radius:8px;border:2px solid var(--accent);box-shadow:0 2px 8px rgba(25,118,210,0.08);cursor:grab}
+    .upload-thumb.selected{outline:4px solid rgba(249,166,2,0.26)}
+    /* Board */
+    .board{
+      width:920px;max-width:calc(100% - 40px);margin:6px auto;border-radius:14px;background:linear-gradient(180deg,#e9f6ff 0%, #ffffff 100%);padding:18px;border:1px solid rgba(10,60,110,0.04);
+      box-shadow:0 6px 20px rgba(8,40,80,0.06);position:relative;overflow:hidden;
     }
-    .menu-bar {
-      display: flex;
-      justify-content: center;
-      gap: 14px;
-      margin-bottom: 12px;
+    .board-inner{display:grid;grid-template-columns:180px 1fr;gap:14px;align-items:start}
+    /* left area: coach and misc */
+    .left-area{display:flex;flex-direction:column;gap:10px}
+    .coach-wrap{background:rgba(255,255,255,0.9);border-radius:12px;padding:8px;border:1px solid rgba(0,0,0,0.03);display:flex;flex-direction:column;align-items:center;min-height:190px;justify-content:flex-start;position:relative}
+    .coach-title{font-weight:700;color:#2a6b9a;margin-bottom:6px}
+    .coach-slot{width:140px;height:160px;display:flex;align-items:center;justify-content:center}
+    /* right area: court and bench */
+    .right-area{display:flex;flex-direction:column;gap:12px}
+    .court{background:linear-gradient(180deg,#e9faff, #ffffff);border-radius:12px;padding:10px;border:1px solid rgba(12,60,110,0.04);min-height:320px;position:relative;overflow:visible}
+    .main-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:start;justify-items:center;padding:6px 10px}
+    .slot-card{width:140px;height:180px;background:linear-gradient(180deg,#fff 0%, #fffefc 100%);border-radius:10px;border:2px dashed rgba(25,118,210,0.26);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:8px;position:relative;cursor:pointer;box-shadow:0 6px 16px rgba(20,90,150,0.04)}
+    .slot-card.dragover{background:#fff9df;border-color:var(--gold)}
+    .slot-card .slot-type{position:absolute;top:8px;left:10px;background:var(--accent);color:#fff;padding:4px 8px;border-radius:8px;font-weight:700;font-size:0.78rem;box-shadow:0 2px 8px rgba(25,118,210,0.08)}
+    .slot-card .badge{position:absolute;right:8px;top:8px;background:#fff;padding:2px 6px;border-radius:12px;font-weight:700;color:#2a6b9a;border:1px solid rgba(12,60,110,0.06);font-size:0.78rem}
+    .char-img{width:110px;height:120px;object-fit:cover;border-radius:8px;border:1.5px solid #e1eefb;margin-top:22px;box-shadow:0 6px 18px rgba(10,80,140,0.06);cursor:grab}
+    .player-label{font-size:0.92rem;font-weight:700;color:var(--accent);margin-top:6px;background:#e8f3ff;padding:3px 8px;border-radius:6px;max-width:120px;text-align:center;word-break:break-word;cursor:pointer}
+    /* bench area */
+    .bench-area{background:transparent;padding:6px;border-radius:10px;display:flex;flex-direction:column;gap:8px}
+    .bench-head{display:flex;justify-content:space-between;align-items:center;padding:0 6px}
+    .bench-strip{display:flex;gap:8px;overflow:auto;padding:8px 6px;min-height:110px}
+    .bench-slot{width:98px;height:120px;background:linear-gradient(180deg,#fff,#fffefc);border-radius:10px;border:2px dotted rgba(100,100,100,0.2);display:flex;flex-direction:column;align-items:center;padding:6px}
+    .bench-slot .char-img{width:86px;height:92px;margin-top:8px}
+    .bench-label{background:#888;color:#fff;padding:3px 8px;border-radius:8px;font-weight:700;position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:0.78rem}
+    /* small helper styles */
+    .slot-type-label{display:none} /* hide original copies to avoid duplication; we use new .slot-type */
+    .flyhigh-menu{position:fixed;right:22px;top:86px;display:flex;flex-direction:column;gap:8px;z-index:1200}
+    .flyhigh-btn{background:#e76f51;color:#fff;border-radius:12px;padding:10px 16px;border:0;box-shadow:0 3px 10px rgba(231,111,81,0.12);display:flex;gap:10px;align-items:center}
+    .download-bar{display:flex;justify-content:center;margin-top:8px}
+    .download-btn{background:#43a047;color:#fff;padding:8px 16px;border-radius:10px;border:0}
+    /* responsive */
+    @media (max-width:950px){
+      .board{padding:12px}
+      .board-inner{grid-template-columns:1fr;gap:12px}
+      .coach-wrap{min-height:130px}
+      .main-grid{grid-template-columns:repeat(3,1fr)}
+      .slot-card{width:30vw;height:40vw}
+      .char-img{width:26vw;height:30vw}
+      .bench-slot{width:22vw;height:28vw}
+      .bench-strip{gap:6px}
     }
-    .btn {
-      background: #1976d2;
-      color: #fff;
-      border: none;
-      padding: 8px 24px;
-      border-radius: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #aac4e3;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: background 0.17s;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn:hover { background: #12549b; }
-    #upload-list { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 10px;}
-    .upload-thumb {
-      width: 65px; height: 85px; object-fit: cover;
-      border: 2px solid #1976d2; border-radius: 7px; margin: 2px; cursor: grab;
-      background: #fff; box-shadow: 0 1px 4px #aac4e3;
-      /* Touch highlight for selection on mobile */
-      transition: box-shadow 0.17s, border-color 0.17s;
-    }
-    .upload-thumb.selected {
-      box-shadow: 0 0 0 4px #ffd700;
-      border-color: #f9a602;
-    }
-    .lineup-bg-wrapper {
-      position: relative;
-      width: 900px; height: 650px;
-      margin: auto;
-      background: 
-        linear-gradient(90deg, #87ceeb 0 50%, #f9a602 50% 100%),
-        repeating-linear-gradient(0deg, #fff2, #fff2 4px, transparent 4px, transparent 64px);
-      border: 4px solid #f9a602;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 3px 18px #aac4e3;
-    }
-    .court-border {
-      position: absolute;
-      top: 40px; left: 30px;
-      width: 840px; height: 520px;
-      border: 6px solid #fff;
-      border-radius: 10px;
-      pointer-events: none;
-      z-index: 0;
-    }
-    .net {
-      position: absolute;
-      left: 0; width: 100%; top: 300px; height: 8px;
-      background: repeating-linear-gradient(
-        90deg,
-        #fff 0 20px, #999 20px 24px
-      );
-      opacity: 0.7;
-      z-index: 1;
-    }
-    .overlay-board {
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(245,250,255,0.67);
-      border-radius: 22px;
-      pointer-events: none;
-    }
-    .drop-slot {
-      position: absolute;
-      width: 110px; height: 143px;
-      background: rgba(255,255,255,0.8);
-      border: 2.5px dashed #1976d2;
-      border-radius: 14px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      overflow: visible;
-      cursor: pointer;
-      text-align: center;
-      transition: background 0.17s;
-      z-index: 2;
-      touch-action: manipulation;
-    }
-    .drop-slot.dragover { background: #fff7b2; border-color: #f9a602; }
-    .char-img {
-      max-width: 98px; max-height: 120px;
-      border-radius: 9px;
-      background: #fff;
-      margin-top: 4px;
-      margin-bottom: 2px;
-      border: 1.5px solid #b2cbe9;
-      box-shadow: 0 2px 8px #aac4e3;
-      cursor: grab;
-    }
-    .label-edit {
-      width: 95px;
-      margin: 0 6px 7px 6px;
-      text-align: center;
-      border: 1.5px solid #1976d2;
-      border-radius: 6px;
-      font-size: 0.98em;
-      font-family: 'Montserrat', Arial, sans-serif;
-      color: #1976d2;
-      background: #f6f9ff;
-      padding: 2.5px 0;
-    }
-    .player-label {
-      font-size: 1.01em;
-      font-weight: 700;
-      color: #1976d2;
-      margin-top: 2px;
-      margin-bottom: 0;
-      line-height: 1.2;
-      background: #e2edff;
-      border-radius: 5px;
-      padding: 1px 5px;
-      pointer-events: auto;
-      word-break: break-word;
-      max-width: 97px;
-      cursor: pointer;
-    }
-    .slot-type-label {
-      font-family: 'Montserrat', Arial, sans-serif;
-      font-size: 0.83em;
-      color: #fff;
-      font-weight: 700;
-      letter-spacing: 1.1px;
-      background: #1976d2;
-      border-radius: 9px;
-      padding: 2px 10px;
-      position: absolute;
-      left: 50%;
-      top: -16px;
-      transform: translateX(-50%);
-      z-index: 5;
-      pointer-events: none;
-      box-shadow: 0 1px 6px #aac4e3;
-    }
-    .coach-slot { border-color: #db3a3a; }
-    .bench-slot { border-style: dotted; border-color: #888; background: rgba(240,240,245,0.73);}
-    .bench-label { background: #888; }
-    .coach-label { background: #db3a3a;}
-    /* Fly High Button Styles */
-    .flyhigh-menu {
-      position: fixed;
-      top: 90px;
-      right: 24px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-    }
-    .flyhigh-btn {
-      background: #e76f51;
-      color: #fff;
-      border: none;
-      border-radius: 13px;
-      padding: 11px 20px 11px 52px;
-      font-size: 1.05em;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ffd70099;
-      cursor: pointer;
-      margin-bottom: 8px;
-      position: relative;
-      transition: background 0.16s;
-      font-family: 'Montserrat', Arial, sans-serif;
-      outline: none;
-      text-decoration: none;
-    }
-    .flyhigh-btn:hover {
-      background: #d35400;
-    }
-    .flyhigh-icon {
-      position: absolute;
-      top: 50%;
-      left: 18px;
-      transform: translateY(-50%);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: #fffbe6;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 1px 5px #ffe06680;
-    }
-    .flyhigh-icon img {
-      width: 21px; height: 21px;
-      display: block;
-    }
-    @media (max-width: 950px) {
-      .lineup-bg-wrapper { width: 99vw; height: 70vw; max-width: 99vw; max-height: 70vw;}
-      .container { max-width: 99vw; }
-      .flyhigh-menu { right: 3vw; }
-    }
-    /* --- Touch UI for mobile: slot highlight --- */
-    .drop-slot.touch-highlight {
-      box-shadow: 0 0 0 5px #ffd700;
-      border-color: #f9a602;
-      background: #fffde7;
-    }
-    .download-bar {
-      display: flex;
-      justify-content: center;
-      margin-top: 14px;
-      margin-bottom: -10px;
-    }
-    .download-btn {
-      background: #43a047;
-      color: #fff;
-      border: none;
-      padding: 8px 24px;
-      border-radius: 10px;
-      font-size: 1em;
-      cursor: pointer;
-      box-shadow: 0 2px 8px #aac4e3;
-      font-family: 'Montserrat', Arial, sans-serif;
-      transition: background 0.17s;
-      text-decoration: none;
-      display: inline-block;
-      margin-left: 10px;
-    }
-    .download-btn:hover { background: #2e7031; }
   </style>
 </head>
 <body>
-<!-- Fly High Side Menu -->
-<div class="flyhigh-menu">
-  <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
-    <span class="flyhigh-icon" aria-hidden="true">
-      <img src="https://o.qoo-img.com/ggpht/gA7VnG0q6z1ffxVMRHM1mvfM2BgJTtEwW1u43xkPNXvzbB-do9KSmrACgb-Aino0hciN" alt="HTTD" />
-    </span>
-    Character HTTD
-  </a>
-  <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1kxsJzNgTzneL_mGnXvpLHLmrH2uDu-7g?usp=sharing" target="_blank" rel="noopener">
-    <span class="flyhigh-icon" aria-hidden="true">
-      <img src="https://play-lh.googleusercontent.com/gkwNDUNhTjZVSsjwsc9z-nJVJvDcWX_1XYQ3ZOCIZvdVWw1Gpjw4WGBe3Zv4PZzWTwE" alt="Fly High" />
-    </span>
-    Character Fly High
-  </a>
-</div>
-<div class="container">
-  <h1>Haikyuu Volleyball Lineup Builder</h1>
-  <div class="menu-bar">
-    <input type="file" id="img-upload" accept="image/*" multiple style="display: none"/>
-    <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
-    <button class="btn" onclick="resetLineup()">Reset Lineup</button>
-    <button class="btn" onclick="saveCurrentLineup()">Save Lineup</button>
+  <!-- Fly High Side Menu (unchanged) -->
+  <div class="flyhigh-menu">
+    <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1X1xf-AoT2FYH2NQ8VQ2QQcxnrNTG715d?usp=drive_link" target="_blank" rel="noopener">
+      <span style="width:30px;height:30px;border-radius:50%;background:#fffbe6;display:inline-flex;align-items:center;justify-content:center"><img style="width:20px;height:20px" src="https://o.qoo-img.com/ggpht/gA7VnG0q6z1ffxVMRHM1mvfM2BgJTtEwW1u43xkPNXvzbB-do9KSmrACgb-Aino0hciN" alt="" /></span>
+      Character HTTD
+    </a>
+    <a class="flyhigh-btn" href="https://drive.google.com/drive/folders/1kxsJzNgTzneL_mGnXvpLHLmrH2uDu-7g?usp=sharing" target="_blank" rel="noopener">
+      <span style="width:30px;height:30px;border-radius:50%;background:#fffbe6;display:inline-flex;align-items:center;justify-content:center"><img style="width:20px;height:20px" src="https://play-lh.googleusercontent.com/gkwNDUNhTjZVSsjwsc9z-nJVJvDcWX_1XYQ3ZOCIZvdVWw1Gpjw4WGBe3Zv4PZzWTwE" alt="" /></span>
+      Character Fly High
+    </a>
   </div>
-  <div class="download-bar" id="download-bar" style="display:none;">
-    <button class="download-btn" onclick="downloadLineup()">Download Lineup as PNG</button>
+
+  <div class="wrap">
+    <h1>Haikyuu Volleyball Lineup Builder</h1>
+
+    <div class="top-row">
+      <div class="left-pill">Haikyu!! touch the dream</div>
+      <div class="menu-bar">
+        <input type="file" id="img-upload" accept="image/*" multiple style="display:none">
+        <button class="btn" onclick="document.getElementById('img-upload').click()">Upload Character</button>
+        <button class="btn secondary" onclick="resetLineup()">Reset Lineup</button>
+        <button class="btn" onclick="saveCurrentLineup()">Save Lineup</button>
+      </div>
+    </div>
+
+    <div id="upload-list"></div>
+
+    <div class="board" id="lineup-board">
+      <div class="board-inner">
+        <!-- LEFT: Coach area -->
+        <div class="left-area">
+          <div class="coach-wrap">
+            <div class="coach-title">Coach</div>
+            <div class="coach-slot drop-slot coach-slot" data-type="coach" data-slot="coach" style="width:140px;height:160px;">
+              <!-- slot-type-label from original kept for JS compatibility but visually hidden (we use new .coach-title) -->
+              <span class="slot-type-label coach-label" style="display:none">COACH</span>
+            </div>
+            <div style="margin-top:10px;font-size:0.92rem;color:#486f93;text-align:center">Nekomata Yasufumi</div>
+          </div>
+
+          <!-- a small area for instructions or spare -->
+          <div style="background:rgba(255,255,255,0.8);border-radius:12px;padding:10px;border:1px solid rgba(10,60,110,0.04);min-height:80px;display:flex;align-items:center;justify-content:center">
+            <div style="text-align:center;color:#2b6b94;font-size:0.95rem">Substitute Player</div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Court and bench -->
+        <div class="right-area">
+          <div class="court">
+            <div class="main-grid">
+              <!-- Top row (3) -->
+              <div class="drop-slot slot-card" data-type="main" data-slot="0">
+                <div class="slot-type">WS</div>
+                <div class="badge">99%</div>
+              </div>
+              <div class="drop-slot slot-card" data-type="main" data-slot="1">
+                <div class="slot-type">LI</div>
+                <div class="badge">69%</div>
+              </div>
+              <div class="drop-slot slot-card" data-type="main" data-slot="2">
+                <div class="slot-type">S</div>
+                <div class="badge">100%</div>
+              </div>
+
+              <!-- Bottom row (3) -->
+              <div class="drop-slot slot-card" data-type="main" data-slot="3">
+                <div class="slot-type">MB</div>
+                <div class="badge">120%</div>
+              </div>
+              <div class="drop-slot slot-card" data-type="main" data-slot="4">
+                <div class="slot-type">MB</div>
+                <div class="badge">47%</div>
+              </div>
+              <div class="drop-slot slot-card" data-type="main" data-slot="5">
+                <div class="slot-type">WS</div>
+                <div class="badge">56%</div>
+              </div>
+            </div>
+            <!-- optional net graphic (subtle) -->
+            <div style="position:absolute;left:50%;top:36%;transform:translateX(-50%);width:88%;height:2px;background:linear-gradient(90deg,rgba(0,0,0,0.08),rgba(0,0,0,0.02));border-radius:2px"></div>
+          </div>
+
+          <!-- bench and controls -->
+          <div class="bench-area">
+            <div class="bench-head">
+              <div style="font-weight:700;color:#2a6b9a">Substitute Players</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <button class="btn secondary" onclick="resetLineup()">Reset</button>
+                <button class="btn" onclick="saveCurrentLineup()">Save</button>
+              </div>
+            </div>
+
+            <div class="bench-strip" id="bench-strip">
+              <!-- bench slots (6) -->
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub0">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub1">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub2">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub3">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub4">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+              <div class="drop-slot bench-slot" data-type="bench" data-slot="sub5">
+                <div class="bench-label" style="display:none">SUB</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="download-bar" id="download-bar" style="display:none;">
+      <button class="download-btn" onclick="downloadLineup()">Download Lineup as PNG</button>
+    </div>
+
   </div>
-  <div id="upload-list"></div>
-  <div class="lineup-bg-wrapper" id="lineup-board">
-    <div class="court-border"></div>
-    <div class="net"></div>
-    <div class="overlay-board"></div>
-    <!-- Main lineup slots (6) -->
-    <div class="drop-slot" data-type="main" data-slot="0" style="left: 160px; top: 70px;">
-      <span class="slot-type-label">WS</span>
-    </div>
-    <div class="drop-slot" data-type="main" data-slot="1" style="left: 400px; top: 40px;">
-      <span class="slot-type-label">S</span>
-    </div>
-    <div class="drop-slot" data-type="main" data-slot="2" style="left: 640px; top: 70px;">
-      <span class="slot-type-label">WS</span>
-    </div>
-    <div class="drop-slot" data-type="main" data-slot="3" style="left: 250px; top: 250px;">
-      <span class="slot-type-label">MB</span>
-    </div>
-    <div class="drop-slot" data-type="main" data-slot="4" style="left: 520px; top: 250px;">
-      <span class="slot-type-label">MB</span>
-    </div>
-    <div class="drop-slot" data-type="main" data-slot="5" style="left: 780px; top: 250px;">
-      <span class="slot-type-label">MB</span>
-    </div>
-    <div class="drop-slot coach-slot" data-type="coach" data-slot="coach" style="left: 30px; top: 320px; width:90px; height:120px;">
-      <span class="slot-type-label coach-label">COACH</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub0" style="left: 160px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub1" style="left: 270px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub2" style="left: 380px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub3" style="left: 490px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub4" style="left: 600px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-    <div class="drop-slot bench-slot" data-type="bench" data-slot="sub5" style="left: 710px; top: 470px; width:90px; height:110px;">
-      <span class="slot-type-label bench-label">SUB</span>
-    </div>
-  </div>
-</div>
-<!-- html2canvas via CDN for PNG export -->
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script>
-let uploadedImages = [];
-let currentDragIndex = null;
-let selectedUploadIndex = null; // For touch/mobile selection
 
-// --- Upload Section ---
-document.getElementById('img-upload').addEventListener('change', function(e) {
-  for (let file of e.target.files) {
-    let reader = new FileReader();
-    reader.onload = function(evt) {
-      uploadedImages.push(evt.target.result);
-      renderUploaded();
-      saveState(); // save images to localStorage when uploaded
-    };
-    reader.readAsDataURL(file);
+  <!-- html2canvas -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+  // === Kept core logic and behavior from your original script, only small integration tweaks to fit new layout ===
+  let uploadedImages = [];
+  let currentDragIndex = null;
+  let selectedUploadIndex = null;
+  // labels and images for slots
+  function getInitialLabels(){
+    return {'0':'','1':'','2':'','3':'','4':'','5':'','coach':'','sub0':'','sub1':'','sub2':'','sub3':'','sub4':'','sub5':''};
   }
-});
+  let slotLabels = getInitialLabels();
+  let slotImages = {};
 
-function renderUploaded() {
-  const list = document.getElementById('upload-list');
-  list.innerHTML = '';
-  uploadedImages.forEach((src, i) => {
-    let img = document.createElement('img');
-    img.src = src;
-    img.className = 'upload-thumb' + (selectedUploadIndex === i ? ' selected' : '');
-    img.draggable = true;
-    img.ondragstart = () => currentDragIndex = i;
-    img.title = 'Drag to lineup';
-
-    // --- Touch support for mobile: tap to select for assignment ---
-    img.addEventListener('touchstart', function(e) {
-      e.preventDefault();
-      if (selectedUploadIndex === i) {
-        // Deselect if already selected
-        selectedUploadIndex = null;
-      } else {
-        selectedUploadIndex = i;
-      }
-      renderUploaded(); // re-render highlight
-    });
-
-    // Desktop: click to select also works
-    img.addEventListener('click', function(e) {
-      if (selectedUploadIndex === i) {
-        selectedUploadIndex = null;
-      } else {
-        selectedUploadIndex = i;
-      }
-      renderUploaded();
-    });
-
-    list.appendChild(img);
-  });
-}
-
-// --- Drag & Drop for Lineup Slots ---
-function makeLabel(label, onEdit) {
-  let labelDiv = document.createElement('div');
-  labelDiv.className = 'player-label';
-  labelDiv.innerText = label || "Click to Edit";
-  labelDiv.onclick = function(e) {
-    e.stopPropagation();
-    let input = document.createElement('input');
-    input.type = 'text';
-    input.value = labelDiv.innerText === "Click to Edit" ? "" : labelDiv.innerText;
-    input.className = 'label-edit';
-    input.onblur = function() {
-      labelDiv.innerText = input.value || "Click to Edit";
-      onEdit(labelDiv.innerText);
-      labelDiv.style.display = '';
-      input.remove();
-    };
-    input.onkeydown = function(ev) {
-      if(ev.key === 'Enter') input.blur();
-    };
-    labelDiv.style.display = 'none';
-    labelDiv.parentNode.insertBefore(input, labelDiv);
-    input.focus();
-  };
-  return labelDiv;
-}
-
-function getInitialLabels() {
-  return {
-    '0': '', '1': '', '2': '', '3': '', '4': '', '5': '',
-    'coach': '',
-    'sub0': '', 'sub1': '', 'sub2': '', 'sub3': '', 'sub4': '', 'sub5': ''
-  }
-}
-let slotLabels = getInitialLabels();
-let slotImages = {};
-
-// --- Save/load state with uploads ---
-function saveState() {
-  let state = { slotLabels, slotImages, uploadedImages };
-  window.localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
-}
-function loadState() {
-  let state = window.localStorage.getItem('haikyuu_lineup_state');
-  if (state) {
-    try {
-      let { slotLabels: l, slotImages: i, uploadedImages: imgs } = JSON.parse(state);
-      slotLabels = l || getInitialLabels();
-      slotImages = i || {};
-      uploadedImages = imgs || [];
-      renderUploaded();
-      document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
-    } catch {}
-  }
-}
-loadState();
-
-document.querySelectorAll('.drop-slot').forEach(slot => {
-  slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
-  slot.ondragleave = () => slot.classList.remove('dragover');
-  slot.ondrop = function(e) {
-    e.preventDefault(); slot.classList.remove('dragover');
-    if (currentDragIndex !== null && uploadedImages[currentDragIndex]) {
-      setSlotImage(slot, uploadedImages[currentDragIndex]);
-    }
-    else if (window._draggingSlot && window._draggingSlot !== slot) {
-      setSlotImage(slot, slotImages[window._draggingSlot.dataset.slot], slotLabels[window._draggingSlot.dataset.slot]);
-      clearSlot(window._draggingSlot);
-    }
-    currentDragIndex = null;
-    window._draggingSlot = null;
-    selectedUploadIndex = null; // Clear touch selection after drop
-    renderUploaded();
-  };
-  slot.addEventListener('mousedown', function(e) {
-    if(e.target.classList.contains('char-img')) {
-      window._draggingSlot = slot;
-    }
-  });
-
-  // --- Touch support: tap on slot to assign selected image ---
-  slot.addEventListener('touchstart', function(e) {
-    // Only assign if an image is selected and slot is empty or replaceable
-    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
-      e.preventDefault();
-      slot.classList.add('touch-highlight');
-      // Assign after short delay to show highlight
-      setTimeout(() => {
-        setSlotImage(slot, uploadedImages[selectedUploadIndex]);
-        slot.classList.remove('touch-highlight');
-        selectedUploadIndex = null;
+  // Upload handling
+  document.getElementById('img-upload').addEventListener('change', function(e){
+    for (let file of e.target.files){
+      let reader = new FileReader();
+      reader.onload = function(evt){
+        uploadedImages.push(evt.target.result);
         renderUploaded();
-      }, 120);
+        saveState();
+      };
+      reader.readAsDataURL(file);
     }
+    // clear input so same file can be re-uploaded if needed
+    e.target.value = '';
   });
 
-  // Desktop: click on slot to assign selected image
-  slot.addEventListener('click', function(e) {
-    if(selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]) {
-      setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+  function renderUploaded(){
+    const list = document.getElementById('upload-list');
+    list.innerHTML = '';
+    uploadedImages.forEach((src,i)=>{
+      let img = document.createElement('img');
+      img.src = src;
+      img.className = 'upload-thumb' + (selectedUploadIndex === i ? ' selected' : '');
+      img.draggable = true;
+      img.ondragstart = () => currentDragIndex = i;
+      img.title = 'Drag to lineup';
+
+      img.addEventListener('touchstart', function(ev){
+        ev.preventDefault();
+        if (selectedUploadIndex === i) selectedUploadIndex = null;
+        else selectedUploadIndex = i;
+        renderUploaded();
+      });
+
+      img.addEventListener('click', function(ev){
+        if (selectedUploadIndex === i) selectedUploadIndex = null;
+        else selectedUploadIndex = i;
+        renderUploaded();
+      });
+
+      list.appendChild(img);
+    });
+  }
+
+  // Save/load to localStorage
+  function saveState(){
+    try {
+      const state = {slotLabels, slotImages, uploadedImages};
+      localStorage.setItem('haikyuu_lineup_state', JSON.stringify(state));
+    } catch(e){}
+  }
+  function loadState(){
+    const state = localStorage.getItem('haikyuu_lineup_state');
+    if (!state) return;
+    try {
+      const parsed = JSON.parse(state);
+      slotLabels = parsed.slotLabels || getInitialLabels();
+      slotImages = parsed.slotImages || {};
+      uploadedImages = parsed.uploadedImages || [];
+      renderUploaded();
+      document.querySelectorAll('.drop-slot').forEach(s => renderSlot(s));
+      if (Object.keys(slotImages).length) document.getElementById('download-bar').style.display = 'flex';
+    } catch(e){}
+  }
+  loadState();
+
+  // Create editable label element
+  function makeLabel(label, onEdit){
+    let labelDiv = document.createElement('div');
+    labelDiv.className = 'player-label';
+    labelDiv.innerText = label || "Click to Edit";
+    labelDiv.onclick = function(e){
+      e.stopPropagation();
+      let input = document.createElement('input');
+      input.type = 'text';
+      input.value = labelDiv.innerText === "Click to Edit" ? "" : labelDiv.innerText;
+      input.className = 'label-edit';
+      input.style.width = '110px';
+      input.onblur = function(){
+        labelDiv.innerText = input.value || "Click to Edit";
+        onEdit(labelDiv.innerText);
+        labelDiv.style.display = '';
+        input.remove();
+      };
+      input.onkeydown = function(ev){ if(ev.key === 'Enter') input.blur(); };
+      labelDiv.style.display = 'none';
+      labelDiv.parentNode.insertBefore(input, labelDiv);
+      input.focus();
+    };
+    return labelDiv;
+  }
+
+  // Render slot contents or placeholder
+  function renderSlot(slot){
+    const key = slot.dataset.slot;
+    slot.innerHTML = '';
+    // keep custom small hidden labels (slot-type-label) removed to avoid duplicates
+    if (slotImages && slotImages[key]){
+      setSlotImage(slot, slotImages[key], slotLabels[key]);
+    } else {
+      // leave empty styled container (slot-card/bench-slot/coach-slot already provide visuals)
+      // but ensure the slot-type-label (old dom) remains for backwards compatibility
+      // (we intentionally do not re-add the original slot-type-label copy)
+    }
+  }
+
+  // core set slot image
+  function setSlotImage(slot, imgSrc, label){
+    slot.innerHTML = '';
+    const slotKey = slot.dataset.slot;
+    slotImages[slotKey] = imgSrc;
+    slotLabels[slotKey] = label || slotLabels[slotKey] || '';
+    // create image element
+    let img = document.createElement('img');
+    img.src = imgSrc;
+    // different sizing handled by CSS for main vs bench via nested selectors (.bench-slot .char-img)
+    img.className = 'char-img';
+    img.draggable = true;
+    img.ondragstart = function(e){
+      window._draggingSlot = slot;
+      currentDragIndex = null;
+      e.dataTransfer.setData('text/plain','');
+    };
+    slot.appendChild(img);
+
+    // editable label
+    let labelDiv = makeLabel(slotLabels[slotKey], val => {
+      slotLabels[slotKey] = val;
+      saveState();
+    });
+    slot.appendChild(labelDiv);
+
+    // keep visible custom "slot-type" or "badge" if present as children in markup (we don't want to lose them)
+    const origType = slot.querySelector('.slot-type');
+    if (origType) slot.appendChild(origType.cloneNode(true));
+    const origBadge = slot.querySelector('.badge');
+    if (origBadge) slot.appendChild(origBadge.cloneNode(true));
+    saveState();
+
+    // show download bar because there are images on board
+    document.getElementById('download-bar').style.display = 'flex';
+  }
+
+  function clearSlot(slot){
+    const slotKey = slot.dataset.slot;
+    slot.innerHTML = '';
+    slotImages[slotKey] = null;
+    slotLabels[slotKey] = '';
+    saveState();
+  }
+
+  // Add event handlers for all drop slots
+  document.querySelectorAll('.drop-slot').forEach(slot => {
+    slot.ondragover = e => { e.preventDefault(); slot.classList.add('dragover'); };
+    slot.ondragleave = () => slot.classList.remove('dragover');
+    slot.ondrop = function(e){
+      e.preventDefault();
+      slot.classList.remove('dragover');
+      if (currentDragIndex !== null && uploadedImages[currentDragIndex]){
+        setSlotImage(slot, uploadedImages[currentDragIndex]);
+      } else if (window._draggingSlot && window._draggingSlot !== slot){
+        // drag between slots
+        setSlotImage(slot, slotImages[window._draggingSlot.dataset.slot], slotLabels[window._draggingSlot.dataset.slot]);
+        clearSlot(window._draggingSlot);
+      }
+      currentDragIndex = null;
+      window._draggingSlot = null;
       selectedUploadIndex = null;
       renderUploaded();
-    }
+    };
+
+    // for desktop dragging of an existing slot image
+    slot.addEventListener('mousedown', function(e){
+      if (e.target.classList.contains('char-img')) {
+        window._draggingSlot = slot;
+      }
+    });
+
+    // touch: tap to assign selected upload image
+    slot.addEventListener('touchstart', function(e){
+      if (selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]){
+        e.preventDefault();
+        slot.classList.add('touch-highlight');
+        setTimeout(() => {
+          setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+          slot.classList.remove('touch-highlight');
+          selectedUploadIndex = null;
+          renderUploaded();
+        }, 120);
+      }
+    });
+
+    // click to assign selected upload image
+    slot.addEventListener('click', function(e){
+      if (selectedUploadIndex !== null && uploadedImages[selectedUploadIndex]){
+        setSlotImage(slot, uploadedImages[selectedUploadIndex]);
+        selectedUploadIndex = null;
+        renderUploaded();
+      }
+    });
+
+    // initial render for a slot
+    renderSlot(slot);
   });
 
-  renderSlot(slot);
-});
-
-function setSlotImage(slot, imgSrc, label) {
-  slot.innerHTML = '';
-  let slotKey = slot.dataset.slot;
-  slotImages[slotKey] = imgSrc;
-  slotLabels[slotKey] = label || slotLabels[slotKey] || '';
-  let img = document.createElement('img');
-  img.src = imgSrc;
-  img.className = 'char-img';
-  img.draggable = true;
-  img.ondragstart = function(e) {
-    window._draggingSlot = slot;
-    currentDragIndex = null;
-    e.dataTransfer.setData('text/plain', '');
-  };
-  slot.appendChild(img);
-
-  let labelDiv = makeLabel(slotLabels[slotKey], val => {
-    slotLabels[slotKey] = val;
+  // Reset lineup
+  function resetLineup(){
+    slotLabels = getInitialLabels();
+    slotImages = {};
+    document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
+    document.getElementById('download-bar').style.display = "none";
     saveState();
-  });
-  slot.appendChild(labelDiv);
-
-  let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
-  if (slotType) {
-    slot.insertBefore(slotType, slot.firstChild);
   }
-  saveState();
-}
-function clearSlot(slot) {
-  let slotKey = slot.dataset.slot;
-  slot.innerHTML = '';
-  slotImages[slotKey] = null;
-  slotLabels[slotKey] = '';
-  let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
-  if (slotType) {
-    slot.appendChild(slotType);
+
+  // Save button
+  function saveCurrentLineup(){
+    saveState();
+    alert('Your current lineup, uploads, and edits have been saved!');
+    document.getElementById('download-bar').style.display = "flex";
   }
-}
 
-function renderSlot(slot) {
-  let slotKey = slot.dataset.slot;
-  slot.innerHTML = '';
-  if(slotImages[slotKey]) {
-    setSlotImage(slot, slotImages[slotKey], slotLabels[slotKey]);
-  } else {
-    let slotType = slot.querySelector('.slot-type-label')?.cloneNode(true);
-    if (slotType) slot.appendChild(slotType);
+  // Download as PNG using html2canvas (same as original)
+  function downloadLineup(){
+    const board = document.getElementById('lineup-board');
+    document.activeElement.blur();
+    html2canvas(board, {backgroundColor:null,useCORS:true,scale:2}).then(function(canvas){
+      let link = document.createElement('a');
+      link.download = "haikyuu_lineup.png";
+      link.href = canvas.toDataURL();
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(()=>document.body.removeChild(link),120);
+    });
   }
-}
 
-function resetLineup() {
-  slotLabels = getInitialLabels();
-  slotImages = {};
-  document.querySelectorAll('.drop-slot').forEach(slot => renderSlot(slot));
-  saveState();
-  document.getElementById('download-bar').style.display = "none";
-}
+  // Expose functions used by inline buttons
+  window.resetLineup = resetLineup;
+  window.saveCurrentLineup = saveCurrentLineup;
+  window.downloadLineup = downloadLineup;
 
-// --- Save Current Lineup Button (manual save) ---
-function saveCurrentLineup() {
-  saveState();
-  alert('Your current lineup, uploads, and edits have been saved!');
-  document.getElementById('download-bar').style.display = "flex";
-}
-
-// --- Download Lineup as PNG ---
-function downloadLineup() {
-  const board = document.getElementById('lineup-board');
-  // Remove focus state on any inputs (labels)
-  document.activeElement.blur();
-  html2canvas(board, {
-    backgroundColor: null,
-    useCORS: true,
-    scale: 2
-  }).then(function(canvas) {
-    let link = document.createElement('a');
-    link.download = "haikyuu_lineup.png";
-    link.href = canvas.toDataURL();
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => document.body.removeChild(link), 100);
-  });
-}
-</script>
+  </script>
 </body>
 </html>
