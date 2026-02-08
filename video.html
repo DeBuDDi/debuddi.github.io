@@ -224,16 +224,14 @@
       <hr>
 
       <p style="text-align:center;color:var(--muted);margin-top:12px;font-size:.95rem;">
-        Note: This uses the YouTube Data API (client-side). If you deploy to GitHub Pages consider moving the API call to a serverless function to protect your API key and avoid quota/CORS issues.
+        Note: This uses a serverless function to fetch videos from the YouTube Data API. Your API key is protected and not exposed to the client.
       </p>
     </div>
   </main>
 
   <script>
-    // IMPORTANT: Replace the placeholder below with your actual API key.
-    // For security, do not commit a production API key to a public repo.
-    // Example (from your previous code): const defaultApiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
-    const apiKey = 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk';
+    // Configuration
+    const serverlessFunctionUrl = 'https://your-domain.vercel.app/api/youtube'; // Update with your serverless function URL
     const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ'; // DeBuDDi channel ID
     const maxResults = 9;
 
@@ -252,9 +250,7 @@
 
     function setPlayer(videoId){
       if(!videoId) return;
-      // Use autoplay=1 when user explicitly clicks a thumbnail. For initial load we set autoplay=0.
       iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
-      // Make sure the player is visible and move to it on small screens.
       iframe.scrollIntoView({behavior:'smooth', block:'center'});
     }
 
@@ -285,19 +281,15 @@
             <div style="margin-left:8px;color:var(--muted);font-size:.82rem">#${idx+1}</div>
           </div>
         `;
-        // clicking sets player to that video and appends autoplay
         item.addEventListener('click', () => {
           iframe.src = `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&autoplay=1`;
-          // update focus for screen readers
           iframe.focus();
         });
         grid.appendChild(item);
       });
 
-      // set first video as default player if present
       if(items.length){
         const firstVid = items[0].id && items[0].id.videoId ? items[0].id.videoId : (items[0].videoId || '');
-        // set player without autoplay initially
         iframe.src = `https://www.youtube.com/embed/${firstVid}?rel=0&modestbranding=1`;
       } else {
         grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No videos found.</p>';
@@ -311,22 +303,18 @@
     }
 
     async function fetchLatestVideos(){
-      if(!apiKey || apiKey === 'AIzaSyARPTkguUfyIghWHr81lhVR8sU6MI1-eOk'){
-        grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No API key configured. Please replace the placeholder API key in the script to fetch videos from YouTube.</p>';
-        document.getElementById('video-card').scrollIntoView();
-        return;
-      }
-
       grid.setAttribute('aria-busy', 'true');
       grid.innerHTML = '<p style="padding:18px;color:var(--muted)">Loading latest videos...</p>';
 
-      const url = `https://www.googleapis.com/youtube/v3/search?key=${encodeURIComponent(apiKey)}&channelId=${encodeURIComponent(channelId)}&part=snippet,id&order=date&maxResults=${maxResults}&type=video`;
       try {
+        const url = `${serverlessFunctionUrl}?channelId=${encodeURIComponent(channelId)}&maxResults=${maxResults}`;
         const res = await fetch(url);
+        
         if(!res.ok){
-          const text = await res.text();
-          throw new Error(`HTTP ${res.status}: ${text}`);
+          const error = await res.json();
+          throw new Error(error.error || `HTTP ${res.status}`);
         }
+        
         const data = await res.json();
         if(!data.items || !data.items.length){
           renderThumbnails([]);
@@ -340,12 +328,8 @@
       }
     }
 
-    // refresh button
     refreshBtn.addEventListener('click', fetchLatestVideos);
-
-    // initial load
     fetchLatestVideos();
-
   </script>
 </body>
 </html>
