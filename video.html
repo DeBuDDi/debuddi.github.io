@@ -187,25 +187,22 @@
       font-weight:700;
       box-shadow:0 6px 16px rgba(0,0,0,.45);
     }
-    
+
+    .info-box{
+      background:#1a4d2e;
+      color:#90ee90;
+      padding:12px;
+      border-radius:8px;
+      margin:10px 0;
+      font-size:0.9em;
+    }
+
     .error-box{
       background:#ff4444;
       color:#fff;
       padding:12px;
       border-radius:8px;
       margin:10px 0;
-    }
-    
-    .debug-info{
-      background:#333;
-      color:#0f0;
-      padding:8px;
-      border-radius:4px;
-      font-family:monospace;
-      font-size:0.9em;
-      margin-top:10px;
-      max-height:100px;
-      overflow-y:auto;
     }
   </style>
 </head>
@@ -243,29 +240,21 @@
       <hr>
 
       <p style="text-align:center;color:var(--muted);margin-top:12px;font-size:.95rem;">
-        Note: This uses a serverless function to protect your API key. API calls are routed through a secure backend.
+        🔒 API key is protected using GitHub Actions. Videos are cached and updated every 6 hours.
       </p>
+      <div id="cache-info"></div>
     </div>
   </main>
 
   <script>
-    // ============ CONFIGURATION ============
-    // Update this URL to match your serverless function endpoint
-    // For Vercel: https://your-project.vercel.app/api/youtube
-    // For Netlify: https://your-site.netlify.app/.netlify/functions/youtube
-    const SERVER_FUNCTION_URL = 'https://your-project.vercel.app/api/youtube';
-    
-    const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ'; // DeBuDDi channel ID
-    const maxResults = 9;
-
+    const VIDEOS_JSON_URL = 'data/videos.json';
     const grid = document.getElementById('videos-grid');
     const iframe = document.getElementById('player-iframe');
     const refreshBtn = document.getElementById('refresh');
-    let debugMode = true; // Set to false to hide debug info
+    const cacheInfo = document.getElementById('cache-info');
 
-    // ============ UTILITY FUNCTIONS ============
-    function log(message, data = null) {
-      console.log(`[DeBuDDi Videos] ${message}`, data || '');
+    function log(msg, data = null) {
+      console.log(`[DeBuDDi Videos] ${msg}`, data || '');
     }
 
     function isoDateToLocal(dateStr) {
@@ -278,23 +267,20 @@
     }
 
     function escapeHtml(str) {
-      return String(str || '').replace(/[&<>"']/g, function(m) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
-      });
+      return String(str || '').replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[m]));
     }
 
-    function showError(message, details = '') {
-      log('ERROR:', message);
-      let html = `<div class="error-box"><strong>⚠️ Error:</strong> ${escapeHtml(message)}`;
-      if (details) {
-        html += `<div class="debug-info">${escapeHtml(details)}</div>`;
-      }
-      html += '</div>';
-      grid.innerHTML = html;
+    function showError(message) {
+      grid.innerHTML = `<div class="error-box"><strong>⚠️ Error:</strong> ${escapeHtml(message)}</div>`;
       grid.setAttribute('aria-busy', 'false');
     }
 
-    // ============ VIDEO RENDERING ============
+    function showInfo(message) {
+      cacheInfo.innerHTML = `<div class="info-box">ℹ️ ${escapeHtml(message)}</div>`;
+    }
+
     function renderThumbnails(items) {
       grid.innerHTML = '';
       grid.setAttribute('aria-busy', 'false');
@@ -313,10 +299,7 @@
           const thumb = thumbnails.medium?.url || thumbnails.high?.url || thumbnails.default?.url || '';
           const date = snippet.publishedAt ? isoDateToLocal(snippet.publishedAt) : '';
 
-          if (!videoId) {
-            log(`Skipping item ${idx}: no videoId`);
-            return;
-          }
+          if (!videoId) return;
 
           const thumbElement = document.createElement('button');
           thumbElement.className = 'thumb';
@@ -346,79 +329,47 @@
         }
       });
 
-      // Set first video as player default
       const firstVideoId = items[0]?.id?.videoId || items[0]?.videoId || '';
       if (firstVideoId) {
         iframe.src = `https://www.youtube.com/embed/${firstVideoId}?rel=0&modestbranding=1`;
       }
     }
 
-    // ============ FETCH VIDEOS ============
-    async function fetchLatestVideos() {
-      log('Fetching videos from:', SERVER_FUNCTION_URL);
-      
-      // Validate configuration
-      if (SERVER_FUNCTION_URL.includes('your-project')) {
-        showError(
-          'Configuration Required',
-          'Please update SERVER_FUNCTION_URL with your actual serverless function URL'
-        );
-        return;
-      }
-
+    async function fetchVideos() {
+      log('Loading videos from cache...');
       grid.setAttribute('aria-busy', 'true');
       grid.innerHTML = '<p style="padding:18px;color:var(--muted)">Loading latest videos...</p>';
 
       try {
-        const params = new URLSearchParams({
-          channelId: channelId,
-          maxResults: maxResults
-        });
-
-        const url = `${SERVER_FUNCTION_URL}?${params.toString()}`;
-        log('Request URL:', url);
-
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          }
-        });
-
-        log('Response status:', response.status);
+        const cacheBuster = new Date().getTime();
+        const response = await fetch(`${VIDEOS_JSON_URL}?v=${cacheBuster}`);
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-          throw new Error(
-            `HTTP ${response.status}: ${errorData.error || errorData.details || 'Unknown error'}`
-          );
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
         const data = await response.json();
-        log('Videos fetched successfully:', data.items?.length);
-
-        if (!data.items || data.items.length === 0) {
-          showError('No videos found for this channel');
-          return;
+        
+        if (!data.success) {
+          throw new Error(data.error || 'Failed to load videos');
         }
+
+        log('Videos loaded successfully');
+        
+        const cacheTime = new Date(data.timestamp);
+        showInfo(`Last updated: ${cacheTime.toLocaleString()}`);
 
         renderThumbnails(data.items);
 
-      } catch (err) {
-        log('Fetch error:', err);
-        showError(
-          'Failed to load videos',
-          `${err.message}\n\nMake sure:\n1. SERVER_FUNCTION_URL is correct\n2. YouTube API key is set in serverless function\n3. Function is deployed and accessible`
-        );
+      } catch (error) {
+        log('Fetch error:', error);
+        showError(`Failed to load videos: ${error.message}`);
       }
     }
 
-    // ============ EVENT LISTENERS ============
-    refreshBtn.addEventListener('click', fetchLatestVideos);
-
-    // ============ INITIAL LOAD ============
+    refreshBtn.addEventListener('click', fetchVideos);
     log('Initializing video player');
-    fetchLatestVideos();
+    fetchVideos();
   </script>
 </body>
 </html>
