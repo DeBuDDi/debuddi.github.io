@@ -168,7 +168,6 @@
       .player iframe{ height:220px; }
     }
 
-    /* simple play overlay */
     .play-overlay{
       position:relative;
     }
@@ -187,6 +186,26 @@
       border-radius:8px;
       font-weight:700;
       box-shadow:0 6px 16px rgba(0,0,0,.45);
+    }
+    
+    .error-box{
+      background:#ff4444;
+      color:#fff;
+      padding:12px;
+      border-radius:8px;
+      margin:10px 0;
+    }
+    
+    .debug-info{
+      background:#333;
+      color:#0f0;
+      padding:8px;
+      border-radius:4px;
+      font-family:monospace;
+      font-size:0.9em;
+      margin-top:10px;
+      max-height:100px;
+      overflow-y:auto;
     }
   </style>
 </head>
@@ -224,111 +243,181 @@
       <hr>
 
       <p style="text-align:center;color:var(--muted);margin-top:12px;font-size:.95rem;">
-        Note: This uses a serverless function to fetch videos from the YouTube Data API. Your API key is protected and not exposed to the client.
+        Note: This uses a serverless function to protect your API key. API calls are routed through a secure backend.
       </p>
     </div>
   </main>
 
   <script>
-    // Configuration
-    const serverlessFunctionUrl = 'https://your-domain.vercel.app/api/youtube'; // Update with your serverless function URL
+    // ============ CONFIGURATION ============
+    // Update this URL to match your serverless function endpoint
+    // For Vercel: https://your-project.vercel.app/api/youtube
+    // For Netlify: https://your-site.netlify.app/.netlify/functions/youtube
+    const SERVER_FUNCTION_URL = 'https://your-project.vercel.app/api/youtube';
+    
     const channelId = 'UCVifvscpsdxwTWRXXnWsjYQ'; // DeBuDDi channel ID
     const maxResults = 9;
 
     const grid = document.getElementById('videos-grid');
     const iframe = document.getElementById('player-iframe');
     const refreshBtn = document.getElementById('refresh');
+    let debugMode = true; // Set to false to hide debug info
 
-    function isoDateToLocal(dateStr){
+    // ============ UTILITY FUNCTIONS ============
+    function log(message, data = null) {
+      console.log(`[DeBuDDi Videos] ${message}`, data || '');
+    }
+
+    function isoDateToLocal(dateStr) {
       try {
         const d = new Date(dateStr);
-        return d.toLocaleDateString(undefined, { year:'numeric', month:'short', day:'numeric' });
-      } catch(e){
+        return d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      } catch (e) {
         return dateStr;
       }
     }
 
-    function setPlayer(videoId){
-      if(!videoId) return;
-      iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
-      iframe.scrollIntoView({behavior:'smooth', block:'center'});
+    function escapeHtml(str) {
+      return String(str || '').replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+      });
     }
 
-    function renderThumbnails(items){
+    function showError(message, details = '') {
+      log('ERROR:', message);
+      let html = `<div class="error-box"><strong>⚠️ Error:</strong> ${escapeHtml(message)}`;
+      if (details) {
+        html += `<div class="debug-info">${escapeHtml(details)}</div>`;
+      }
+      html += '</div>';
+      grid.innerHTML = html;
+      grid.setAttribute('aria-busy', 'false');
+    }
+
+    // ============ VIDEO RENDERING ============
+    function renderThumbnails(items) {
       grid.innerHTML = '';
       grid.setAttribute('aria-busy', 'false');
 
-      items.forEach((it, idx) => {
-        const vid = it.id && it.id.videoId ? it.id.videoId : (it.videoId || '');
-        const sn = it.snippet || {};
-        const title = sn.title || 'Untitled';
-        const thumb = (sn.thumbnails && (sn.thumbnails.medium || sn.thumbnails.high || sn.thumbnails.default)) ? (sn.thumbnails.medium?.url || sn.thumbnails.high?.url || sn.thumbnails.default?.url) : '';
-        const date = sn.publishedAt ? isoDateToLocal(sn.publishedAt) : '';
+      if (!items || items.length === 0) {
+        grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No videos found.</p>';
+        return;
+      }
 
-        const item = document.createElement('button');
-        item.className = 'thumb';
-        item.type = 'button';
-        item.title = title;
-        item.innerHTML = `
-          <div class="play-overlay">
-            <img src="${thumb}" alt="${escapeHtml(title)} thumbnail">
-          </div>
-          <div class="meta">
-            <div style="flex:1;min-width:0">
-              <div class="title">${escapeHtml(title)}</div>
-              <div style="color:#bdbdbd;font-size:.82rem;margin-top:.35rem">${escapeHtml(date)}</div>
+      items.forEach((item, idx) => {
+        try {
+          const videoId = item.id?.videoId || item.videoId || '';
+          const snippet = item.snippet || {};
+          const title = snippet.title || 'Untitled';
+          const thumbnails = snippet.thumbnails || {};
+          const thumb = thumbnails.medium?.url || thumbnails.high?.url || thumbnails.default?.url || '';
+          const date = snippet.publishedAt ? isoDateToLocal(snippet.publishedAt) : '';
+
+          if (!videoId) {
+            log(`Skipping item ${idx}: no videoId`);
+            return;
+          }
+
+          const thumbElement = document.createElement('button');
+          thumbElement.className = 'thumb';
+          thumbElement.type = 'button';
+          thumbElement.title = title;
+          thumbElement.innerHTML = `
+            <div class="play-overlay">
+              <img src="${thumb}" alt="${escapeHtml(title)} thumbnail">
             </div>
-            <div style="margin-left:8px;color:var(--muted);font-size:.82rem">#${idx+1}</div>
-          </div>
-        `;
-        item.addEventListener('click', () => {
-          iframe.src = `https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&autoplay=1`;
-          iframe.focus();
-        });
-        grid.appendChild(item);
+            <div class="meta">
+              <div style="flex:1;min-width:0">
+                <div class="title">${escapeHtml(title)}</div>
+                <div style="color:#bdbdbd;font-size:.82rem;margin-top:.35rem">${escapeHtml(date)}</div>
+              </div>
+              <div style="margin-left:8px;color:var(--muted);font-size:.82rem">#${idx + 1}</div>
+            </div>
+          `;
+
+          thumbElement.addEventListener('click', () => {
+            iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`;
+            iframe.focus();
+          });
+
+          grid.appendChild(thumbElement);
+        } catch (err) {
+          log(`Error rendering item ${idx}:`, err);
+        }
       });
 
-      if(items.length){
-        const firstVid = items[0].id && items[0].id.videoId ? items[0].id.videoId : (items[0].videoId || '');
-        iframe.src = `https://www.youtube.com/embed/${firstVid}?rel=0&modestbranding=1`;
-      } else {
-        grid.innerHTML = '<p style="padding:18px;color:var(--muted)">No videos found.</p>';
+      // Set first video as player default
+      const firstVideoId = items[0]?.id?.videoId || items[0]?.videoId || '';
+      if (firstVideoId) {
+        iframe.src = `https://www.youtube.com/embed/${firstVideoId}?rel=0&modestbranding=1`;
       }
     }
 
-    function escapeHtml(str){
-      return String(str || '').replace(/[&<>"']/g, function(m){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-      });
-    }
+    // ============ FETCH VIDEOS ============
+    async function fetchLatestVideos() {
+      log('Fetching videos from:', SERVER_FUNCTION_URL);
+      
+      // Validate configuration
+      if (SERVER_FUNCTION_URL.includes('your-project')) {
+        showError(
+          'Configuration Required',
+          'Please update SERVER_FUNCTION_URL with your actual serverless function URL'
+        );
+        return;
+      }
 
-    async function fetchLatestVideos(){
       grid.setAttribute('aria-busy', 'true');
       grid.innerHTML = '<p style="padding:18px;color:var(--muted)">Loading latest videos...</p>';
 
       try {
-        const url = `${serverlessFunctionUrl}?channelId=${encodeURIComponent(channelId)}&maxResults=${maxResults}`;
-        const res = await fetch(url);
-        
-        if(!res.ok){
-          const error = await res.json();
-          throw new Error(error.error || `HTTP ${res.status}`);
+        const params = new URLSearchParams({
+          channelId: channelId,
+          maxResults: maxResults
+        });
+
+        const url = `${SERVER_FUNCTION_URL}?${params.toString()}`;
+        log('Request URL:', url);
+
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          }
+        });
+
+        log('Response status:', response.status);
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+          throw new Error(
+            `HTTP ${response.status}: ${errorData.error || errorData.details || 'Unknown error'}`
+          );
         }
-        
-        const data = await res.json();
-        if(!data.items || !data.items.length){
-          renderThumbnails([]);
+
+        const data = await response.json();
+        log('Videos fetched successfully:', data.items?.length);
+
+        if (!data.items || data.items.length === 0) {
+          showError('No videos found for this channel');
           return;
         }
+
         renderThumbnails(data.items);
-      } catch(err){
-        console.error('Error fetching YouTube data', err);
-        grid.innerHTML = `<p style="padding:18px;color:#f99">Error loading videos: ${escapeHtml(err.message || String(err))}</p>`;
-        grid.setAttribute('aria-busy','false');
+
+      } catch (err) {
+        log('Fetch error:', err);
+        showError(
+          'Failed to load videos',
+          `${err.message}\n\nMake sure:\n1. SERVER_FUNCTION_URL is correct\n2. YouTube API key is set in serverless function\n3. Function is deployed and accessible`
+        );
       }
     }
 
+    // ============ EVENT LISTENERS ============
     refreshBtn.addEventListener('click', fetchLatestVideos);
+
+    // ============ INITIAL LOAD ============
+    log('Initializing video player');
     fetchLatestVideos();
   </script>
 </body>
